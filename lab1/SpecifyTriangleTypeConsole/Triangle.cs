@@ -42,9 +42,9 @@ public class Triangle
 												case Type.Equilateral:
 																return "Equilateral";
 												case Type.NoTriangle:
-																return "No triangle";
+																return "Non-triangular";
 												default:
-																return "Internal error";
+																return "Error";
 								}
 				}
 

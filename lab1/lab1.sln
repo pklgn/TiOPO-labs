@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecifyTriangleTypeConsole", "SpecifyTriangleTypeConsole\SpecifyTriangleTypeConsole.csproj", "{3DB305B5-7731-497A-9695-6A612C82A314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecifyTriangleTypeConsole", "SpecifyTriangleTypeConsole\SpecifyTriangleTypeConsole.csproj", "{3DB305B5-7731-497A-9695-6A612C82A314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecifyTriangleTypeConsoleChecker", "SpecifyTriangleTypeConsoleChecker\SpecifyTriangleTypeConsoleChecker.csproj", "{68EDFEA5-C197-49C8-9B9B-4D0953BF105F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3DB305B5-7731-497A-9695-6A612C82A314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DB305B5-7731-497A-9695-6A612C82A314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DB305B5-7731-497A-9695-6A612C82A314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68EDFEA5-C197-49C8-9B9B-4D0953BF105F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68EDFEA5-C197-49C8-9B9B-4D0953BF105F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68EDFEA5-C197-49C8-9B9B-4D0953BF105F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68EDFEA5-C197-49C8-9B9B-4D0953BF105F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

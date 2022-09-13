@@ -33,7 +33,7 @@ try
 }
 catch (Exception e)
 {
-				Console.WriteLine("Internal error");
+				Console.WriteLine("Error");
 				return 1;
 }
 
