@@ -13,43 +13,31 @@ class HtmlLinkParser
 				private ISet<string> m_paths;
 				private HtmlWeb m_htmlWeb;
     private Uri m_uri;
+    private HttpClient m_httpClient = new HttpClient();
 
-                public HtmlLinkParser(Uri uri)
+    public HtmlLinkParser(Uri uri)
 				{
 								m_paths = new HashSet<string>();
 								m_htmlWeb = new HtmlWeb();
         m_uri = uri;
 				}
 
-				public void TraverseAllPageLinks(Uri uri)
+				private void TraverseAllPageLinks(Uri uri)
 				{
         HtmlDocument doc = m_htmlWeb.Load(uri);
         var paths = doc.DocumentNode.Descendants("a")
                         .Select(a => a.GetAttributeValue("href", null))
-                        .Where(link => !String.IsNullOrEmpty(link));
+                        .Where(path => !String.IsNullOrEmpty(path));
 
         foreach (var path in paths)
         {
-            Uri? pathCombinedUri = CombineUriWithPath(uri, path);
-            if (pathCombinedUri != null)
-            {
-                if (m_uri.Host == pathCombinedUri.Host)
-                {
-                    AccountPageLink(pathCombinedUri);
-                    //Console.WriteLine(pathCombinedUri.ToString());
-                    continue;
-                }
-            }
+            // Try concatenating uri with path assuming it as a relative path
+            Uri? pathCombinedUri = TryGetUriWithPath(uri, path);
+            AccountPagePath(pathCombinedUri);
 
+            // Try creating uri with path assuming it as an absolute path
             Uri.TryCreate(path, UriKind.Absolute, out Uri? pathUri);
-            if (pathUri != null)
-            {
-                if (m_uri.Host == pathUri.Host)
-                {
-                    AccountPageLink(pathUri);
-                    //Console.WriteLine(pathUri.ToString());
-                }
-            }
+            AccountPagePath(pathUri);
         }
 				}
 
@@ -60,7 +48,7 @@ class HtmlLinkParser
         return m_paths;
     }
 
-    public static Uri? CombineUriWithPath(Uri uri, string path)
+    public static Uri? TryGetUriWithPath(Uri uri, string path)
     {
         Uri? pathUri = new Uri("about:blank");
         bool pathUriWasCreated = Uri.TryCreate(uri, path, out pathUri);
@@ -73,48 +61,25 @@ class HtmlLinkParser
         return pathUri;
     }
 
-    public void AccountPageLink(Uri uri)
+    private void AccountPagePath(Uri? uri)
     {
-        if (m_paths.Add(uri.LocalPath))
+        if (uri != null &&
+            m_uri.Host == uri.Host &&
+            m_paths.Add(uri.LocalPath))
         {
             TraverseAllPageLinks(uri);
         }
     }
 
-    public bool IsValidUri(Uri uri)
-    {
-        using (HttpClient Client = new HttpClient())
-        {
-            HttpResponseMessage result = Client.GetAsync(uri).Result;
-            HttpStatusCode StatusCode = result.StatusCode;
-
-            switch (StatusCode)
-            {
-
-                case HttpStatusCode.Accepted:
-                    return true;
-                case HttpStatusCode.OK:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-    }
-
-    public Uri ConcatUriWithLink(string path)
+    public Uri GetUriWithPath(string path)
     {
         return new Uri(String.Format("{0}/{1}", m_uri.ToString().TrimEnd('/'), path.TrimStart('/')));
     }
 
-    public async Task<int> CheckUriAccessibility(Uri uri)
+    public async Task<int> GetUriStatusCode(Uri uri)
     {
-        HttpClient httpClient = new HttpClient();
-        
-        int statusNumber;
-        HttpResponseMessage webResponse = await httpClient.GetAsync(uri);
+        HttpResponseMessage webResponse = await m_httpClient.GetAsync(uri);
 
-        statusNumber = (int)webResponse.StatusCode;
-
-        return statusNumber;
+        return (int)webResponse.StatusCode; ;
     }
 }
