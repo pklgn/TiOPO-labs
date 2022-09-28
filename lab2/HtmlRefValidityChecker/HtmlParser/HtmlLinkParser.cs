@@ -23,26 +23,30 @@ class HtmlLinkParser
 				public void TraverseAllPageLinks(Uri uri)
 				{
         HtmlDocument doc = m_htmlWeb.Load(uri);
-								var paths = doc.DocumentNode.Descendants("a")
-												.Select(a => a.GetAttributeValue("href", null))
-												.Where(link => !String.IsNullOrEmpty(link));
+        var paths = doc.DocumentNode.Descendants("a")
+                        .Select(a => a.GetAttributeValue("href", null))
+                        .Where(link => !String.IsNullOrEmpty(link));
 
         foreach (var path in paths)
         {
             Uri? pathCombinedUri = CombineUriWithPath(uri, path);
             if (pathCombinedUri != null)
             {
-                AccountPageLink(pathCombinedUri);
-
-                continue;
+                if (m_uri.Host == pathCombinedUri.Host)
+                {
+                    AccountPageLink(pathCombinedUri);
+                    Console.WriteLine(pathCombinedUri.ToString());
+                    continue;
+                }
             }
 
-            Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out Uri? pathUri);
+            Uri.TryCreate(path, UriKind.Absolute, out Uri? pathUri);
             if (pathUri != null)
             {
-                if (m_uri.Host == uri.Host)
+                if (m_uri.Host == pathUri.Host)
                 {
                     AccountPageLink(pathUri);
+                    Console.WriteLine(pathUri.ToString());
                 }
             }
         }
