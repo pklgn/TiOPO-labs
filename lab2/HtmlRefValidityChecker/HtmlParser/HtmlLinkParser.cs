@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -13,7 +14,7 @@ class HtmlLinkParser
 				private HtmlWeb m_htmlWeb;
     private Uri m_uri;
 
-				public HtmlLinkParser(Uri uri)
+                public HtmlLinkParser(Uri uri)
 				{
 								m_paths = new HashSet<string>();
 								m_htmlWeb = new HtmlWeb();
@@ -35,7 +36,7 @@ class HtmlLinkParser
                 if (m_uri.Host == pathCombinedUri.Host)
                 {
                     AccountPageLink(pathCombinedUri);
-                    Console.WriteLine(pathCombinedUri.ToString());
+                    //Console.WriteLine(pathCombinedUri.ToString());
                     continue;
                 }
             }
@@ -46,7 +47,7 @@ class HtmlLinkParser
                 if (m_uri.Host == pathUri.Host)
                 {
                     AccountPageLink(pathUri);
-                    Console.WriteLine(pathUri.ToString());
+                    //Console.WriteLine(pathUri.ToString());
                 }
             }
         }
@@ -78,5 +79,42 @@ class HtmlLinkParser
         {
             TraverseAllPageLinks(uri);
         }
+    }
+
+    public bool IsValidUri(Uri uri)
+    {
+        using (HttpClient Client = new HttpClient())
+        {
+            HttpResponseMessage result = Client.GetAsync(uri).Result;
+            HttpStatusCode StatusCode = result.StatusCode;
+
+            switch (StatusCode)
+            {
+
+                case HttpStatusCode.Accepted:
+                    return true;
+                case HttpStatusCode.OK:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    public Uri ConcatUriWithLink(string path)
+    {
+        return new Uri(String.Format("{0}/{1}", m_uri.ToString().TrimEnd('/'), path.TrimStart('/')));
+    }
+
+    public async Task<int> CheckUriAccessibility(Uri uri)
+    {
+        HttpClient httpClient = new HttpClient();
+        
+        int statusNumber;
+        HttpResponseMessage webResponse = await httpClient.GetAsync(uri);
+
+        statusNumber = (int)webResponse.StatusCode;
+
+        return statusNumber;
     }
 }

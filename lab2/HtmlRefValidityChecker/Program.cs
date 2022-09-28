@@ -9,4 +9,7 @@ links = htmlLinkParser.GetAllPageLinks();
 foreach (var link in links)
 {
     Console.WriteLine(link);
+    Console.WriteLine(htmlLinkParser.ConcatUriWithLink(link).ToString());
+    int result = await htmlLinkParser.CheckUriAccessibility(htmlLinkParser.ConcatUriWithLink(link));
+    Console.WriteLine(result);
 }
