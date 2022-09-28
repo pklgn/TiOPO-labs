@@ -30,14 +30,14 @@ class HtmlLinkParser
         return m_paths;
     }
 
-    public static Uri? TryGetUriWithLocalPath(Uri uri, string localPath)
+    private static Uri? TryGetUriWithLocalPath(Uri uri, string localPath)
     {
         Uri.TryCreate(uri, localPath, out Uri? resultUri);
 
         return resultUri;
     }
 
-    public static Uri? TryGetUriWithAbsolutePath(string absolutePath)
+    private static Uri? TryGetUriWithAbsolutePath(string absolutePath)
     {
         Uri.TryCreate(absolutePath, UriKind.Absolute, out Uri? resultUri);
 
@@ -56,7 +56,7 @@ class HtmlLinkParser
         return (int)webResponse.StatusCode;
     }
 
-    public bool IsSuccessStatusCode(int statusCode)
+    public static bool IsSuccessStatusCode(int statusCode)
     {
         return ((int)statusCode >= 200) && ((int)statusCode <= 299);
     }
