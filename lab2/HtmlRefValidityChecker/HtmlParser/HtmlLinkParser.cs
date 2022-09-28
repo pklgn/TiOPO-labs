@@ -11,17 +11,17 @@ namespace HtmlRefValidityChecker.HtmlParser;
 
 class HtmlLinkParser
 {
-				private SortedSet<string> m_paths;
-				private HtmlWeb m_htmlWeb;
+    private SortedSet<string> m_paths;
+    private HtmlWeb m_htmlWeb;
     private Uri m_uri;
     private HttpClient m_httpClient = new HttpClient();
 
     public HtmlLinkParser(Uri uri)
-				{
-								m_paths = new SortedSet<string>();
-								m_htmlWeb = new HtmlWeb();
+    {
+        m_paths = new SortedSet<string>();
+        m_htmlWeb = new HtmlWeb();
         m_uri = uri;
-				}
+    }
 
     public SortedSet<string> GetAllPageLinks()
     {
