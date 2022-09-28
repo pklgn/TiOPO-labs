@@ -24,18 +24,36 @@ void RunTests()
 {
 				using StreamWriter output = new("OUTPUT.TXT");
 				string? testLine;
+				uint testNumber = 0;
 				while ((testLine = Console.ReadLine()) != null)
 				{
+								++testNumber;
+								if (testLine == "")
+								{
+												output.WriteLine();
+												continue;
+								}
 								string[] testLineSplittedBySpace = testLine.Split(" ");
 
 								string[] argsString = new string[3];
-								for (int i = 0; i < 3; ++i)
+								bool wasSuccess = false;
+								
+								try
 								{
-												argsString[i] = testLineSplittedBySpace[i];
+												for (int i = 0; i < 3; ++i)
+												{
+																argsString[i] = testLineSplittedBySpace[i];
+												}
+												string args = string.Join(" ", argsString);
+												string expectedResult = testLineSplittedBySpace.Last();
+												wasSuccess = CheckTriangle(args, expectedResult);
 								}
-								string args = string.Join(" ", argsString);
-								string expectedResult = testLineSplittedBySpace.Last();
-								bool wasSuccess = CheckTriangle(args, expectedResult);
+								catch (Exception e)
+								{
+												Console.WriteLine($"{e.Message} at line {testNumber}");
+								}
+
+								
 								string result = (wasSuccess) ? "success" : "error";
 								output.WriteLine(result);
 				}

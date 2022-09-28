@@ -31,7 +31,7 @@ try
 				Console.WriteLine(triangle.TypeToString());
 				return 0;
 }
-catch (Exception e)
+catch (Exception)
 {
 				Console.WriteLine("Error");
 				return 1;
