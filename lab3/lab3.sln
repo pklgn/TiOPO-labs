@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService", "SubscriptionService\SubscriptionService.csproj", "{8BCF9A59-C4BE-49F2-9D06-3EC932DA7CBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subscription", "SubscriptionService\Subscription.csproj", "{8BCF9A59-C4BE-49F2-9D06-3EC932DA7CBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsSubscriptionService", "TestsSubscriptionService\TestsSubscriptionService.csproj", "{A3D4E44B-75A1-44BA-8427-E0155F09B1F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8BCF9A59-C4BE-49F2-9D06-3EC932DA7CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BCF9A59-C4BE-49F2-9D06-3EC932DA7CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BCF9A59-C4BE-49F2-9D06-3EC932DA7CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3D4E44B-75A1-44BA-8427-E0155F09B1F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3D4E44B-75A1-44BA-8427-E0155F09B1F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3D4E44B-75A1-44BA-8427-E0155F09B1F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3D4E44B-75A1-44BA-8427-E0155F09B1F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

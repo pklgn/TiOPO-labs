@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace SubscriptionService;
+namespace Subscription;
 
 using AdditionalOption = Tuple<Guid, string>;
 
@@ -21,20 +21,22 @@ public class SubscriptionService
     private IBenefitService _benefitService;
     private IEmailSender _emailSender;
 
+    private const decimal _standartRate = 100;
+
     //ежемесячная базовая стоимость
     private decimal _monthlyRate;
 
     //дополнительные опции подписки
     private List<AdditionalOption> _additionalOptions = new List<Tuple<Guid, string>>();
 
-    public SubscriptionService(IBenefitService benefitService, IEmailSender emailSender, decimal monthlyRate)
+    public SubscriptionService(IBenefitService benefitService, IEmailSender emailSender, decimal monthlyRate = _standartRate)
     {
         _benefitService = benefitService;
         _emailSender = emailSender;
         _monthlyRate = monthlyRate;
     }
 
-    string GetBenefitFromCategory(string keyword, Guid categoryId)
+    public string SearchBenefitFromCategory(string keyword, Guid categoryId)
     {
         var benefits = _benefitService.GetBenefitsForCategory(categoryId);
         var appropriateBenefit = benefits.Where(benefit => benefit.ToLower().Contains(keyword)).FirstOrDefault();
@@ -47,9 +49,14 @@ public class SubscriptionService
         return appropriateBenefit;
     }
 
-    DateTime GetBenefitExpireDateTime(Guid benefitGuid)
+    public DateTime GetBenefitExpireDateTime(Guid benefitGuid)
     {
         return _benefitService.GetBenefitExpireDateTime(benefitGuid);
+    }
+
+    public IEnumerable<string> GetAllBenefitsForCategory(Guid categoryId)
+    {
+        return _benefitService.GetBenefitsForCategory(categoryId);
     }
 
     public void SendEmail(string recipient, string notification)
@@ -62,10 +69,10 @@ public class SubscriptionService
 
     public decimal CalculatePriceForPeriod(DateTime periodStart, DateTime periodEnd)
     {
-        //TODO: логика того, что подписка не может быть меньше чем на месяц
+        //FIXED: логика того, что подписка не может быть меньше чем на месяц
         if (periodStart > periodEnd)
         {
-            throw new ArgumentException($"Start period {periodStart} must precede end period value {periodEnd}");
+            throw new ArgumentException("Start period must precede end period value");
         }
 
         var periodInMonths = GetDiffInMonths(periodStart, periodEnd);
@@ -89,7 +96,11 @@ public class SubscriptionService
 
     public void RemoveAdditionOption(Guid additionalOptionGuid)
     {
-        _additionalOptions.Where(option => option.Item1 == additionalOptionGuid).FirstOrDefault();
+        var optionToRemove = _additionalOptions.Where(option => option.Item1 == additionalOptionGuid).FirstOrDefault();
+        if (optionToRemove != null)
+        {
+            _additionalOptions.Remove(optionToRemove);
+        }
     }
 
     public IEnumerable<AdditionalOption> GetAdditionalOptions()
@@ -101,6 +112,11 @@ public class SubscriptionService
     {
         Int32 months = 0;
         DateTime tmp = start;
+
+        if (start.AddMonths(1) > end)
+        {
+            return months;
+        }
 
         while (tmp < end)
         {
