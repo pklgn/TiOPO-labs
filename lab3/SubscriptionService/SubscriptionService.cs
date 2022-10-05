@@ -1,10 +1,11 @@
-﻿using System.Data.SqlTypes;
+﻿using System.Collections;
+using System.Data.SqlTypes;
 
 namespace SubscriptionService;
 
 public interface IBenefitService
 {
-				string GetBenefitDescription(Guid benefitGuid);
+				IEnumerable<string> GetBenefitsForCategory(Guid categoryGuid);
 				DateTime GetBenefitExpireDateTime(Guid benefitGuid);
 				IEnumerable<string> GetBenefitsForSubscriptionPlan(Guid subscriptionPlanGuid);
 }
@@ -19,9 +20,10 @@ public class SubscriptionService
 				private IBenefitService _benefitService;
 				private IEmailSender _emailSender;
 
-				//ежемесячная ставка
+				//ежемесячная базовая стоимость
 				private decimal _monthlyRate;
 
+				//дополнительные опции подписки
 				private List<Tuple<Guid, string>> _additionalOptions = new List<Tuple<Guid, string>>();
 
 				public SubscriptionService(IBenefitService benefitService, IEmailSender emailSender, decimal monthlyRate)
@@ -31,12 +33,25 @@ public class SubscriptionService
 								_monthlyRate = monthlyRate;
 				}
 
-				string GetBenefitDescription(Guid benefitGuid)
+				string GetBenefitFromCategory(string keyword, Guid categoryId)
 				{
+								var benefits = _benefitService.GetBenefitsForCategory(categoryId);
+								
+								var appropriateBenefit = benefits.Where(benefit => benefit.ToLower().Contains(keyword)).FirstOrDefault();
+
+								if (appropriateBenefit == null)
+								{
+												return "Benefit for specifiend keyword wasn't foundn\n";
+								}
+
+								return appropriateBenefit;
 				}
 
 				DateTime GetBenefitExpireDateTime(Guid benefitGuid)
 				{
+								
+								return _benefitService.GetBenefitExpireDateTime(benefitGuid);
+
 				}
 
 				IEnumerable<string> GetBenefitsForSubscriptionPlan(Guid subscriptionPlanGuid)
@@ -54,6 +69,7 @@ public class SubscriptionService
 				public decimal CalculatePriceForPeriod(DateTime periodStart, DateTime periodEnd)
 				{
 								//TODO: логика того, что подписка не может быть меньше чем на месяц
+
 								return _monthlyRate;
 				}
 
