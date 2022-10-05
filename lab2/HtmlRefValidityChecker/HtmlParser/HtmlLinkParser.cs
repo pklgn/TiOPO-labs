@@ -65,7 +65,7 @@ class HtmlLinkParser
     {
         if (uri != null &&
             m_uri.Host == uri.Host &&
-            m_paths.Add(uri.LocalPath ))
+            m_paths.Add(uri.LocalPath))
         {
             TraverseAllPageLinks(uri);
         }
