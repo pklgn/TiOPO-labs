@@ -43,7 +43,7 @@ public class SubscriptionService
 
         if (appropriateBenefit == null)
         {
-            return "Benefit for specifiend keyword wasn't found\n";
+            return "";
         }
 
         return appropriateBenefit;
