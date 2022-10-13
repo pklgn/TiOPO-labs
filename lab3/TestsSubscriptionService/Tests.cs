@@ -4,11 +4,8 @@
 namespace TestsSubscriptionService;
 
 using System;
-using System.Diagnostics;
-using System.Reflection;
 using Moq;
 using Subscription;
-using Xunit.Sdk;
 
 public class SubscriptionServiceChecking
 {
@@ -120,7 +117,7 @@ public class SubscriptionServiceChecking
         var periodStart = new DateTime(2022, 10, 5, 23, 59, 59);
         var periodEnd = new DateTime(2022, 10, 4, 0, 59, 59);
 
-        Assert.Throws<ArgumentException>(() => subscriptionService.CalculatePriceForPeriod(periodStart, periodEnd));
+        Assert.Throws<ArgumentException>(() => subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd));
     }
 
     [Fact]
@@ -130,7 +127,7 @@ public class SubscriptionServiceChecking
         var periodStart = new DateTime(2022, 10, 5, 23, 59, 59);
         var periodEnd = new DateTime(2022, 10, 15, 0, 59, 59);
 
-        Assert.Throws<Exception>(() => subscriptionService.CalculatePriceForPeriod(periodStart, periodEnd));
+        Assert.Throws<Exception>(() => subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd));
     }
 
     [Fact]
@@ -141,7 +138,7 @@ public class SubscriptionServiceChecking
         var periodEnd = new DateTime(2022, 12, 1, 0, 59, 59);
         var expectedPrice = 200;
 
-        var price = subscriptionService.CalculatePriceForPeriod(periodStart, periodEnd);
+        var price = subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
 
         Assert.Equal(price, expectedPrice);
     }
@@ -154,7 +151,7 @@ public class SubscriptionServiceChecking
         var periodEnd = new DateTime(2022, 11, 5, 23, 59, 59);
         var expectedPrice = 100;
 
-        var price = subscriptionService.CalculatePriceForPeriod(periodStart, periodEnd);
+        var price = subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
 
         Assert.Equal(price, expectedPrice);
     }
@@ -166,7 +163,7 @@ public class SubscriptionServiceChecking
         var periodStart = new DateTime(2022, 10, 5, 23, 59, 59);
         var periodEnd = new DateTime(2022, 11, 5, 23, 59, 58);
 
-        Assert.Throws<Exception>(() => subscriptionService.CalculatePriceForPeriod(periodStart, periodEnd));
+        Assert.Throws<Exception>(() => subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd));
     }
 
     [Fact]
@@ -174,7 +171,7 @@ public class SubscriptionServiceChecking
     {
         var subscriptionService = new SubscriptionService(null, null);
 
-        subscriptionService.CreateAdditionOption("option1", "description");
+        subscriptionService.CreateAdditionalOption("option1", "description", Convert.ToDecimal(50));
 
         Assert.Equal("option1: description", subscriptionService.GetAdditionalOptions().First().Item2);
         Assert.Single(subscriptionService.GetAdditionalOptions());
@@ -184,10 +181,10 @@ public class SubscriptionServiceChecking
     public void Add_several_additional_options()
     {
         var subscriptionService = new SubscriptionService(null, null);
-        var additionalOption1 = new Tuple<string, string>("option1", "description1");
-        var additionalOption2 = new Tuple<string, string>("option2", "description2");
-        subscriptionService.CreateAdditionOption(additionalOption1.Item1, additionalOption1.Item2);
-        subscriptionService.CreateAdditionOption(additionalOption2.Item1, additionalOption2.Item2);
+        var additionalOption1 = new Tuple<string, string, decimal>("option1", "description1", Convert.ToDecimal(50));
+        var additionalOption2 = new Tuple<string, string, decimal>("option2", "description2", Convert.ToDecimal(60));
+        subscriptionService.CreateAdditionalOption(additionalOption1.Item1, additionalOption1.Item2, additionalOption1.Item3);
+        subscriptionService.CreateAdditionalOption(additionalOption2.Item1, additionalOption2.Item2, additionalOption2.Item3);
 
         Assert.Equal(2, subscriptionService.GetAdditionalOptions().Count());
         Assert.Equal($"{additionalOption1.Item1}: {additionalOption1.Item2}", subscriptionService.GetAdditionalOptions().First().Item2);
@@ -197,9 +194,9 @@ public class SubscriptionServiceChecking
     public void Remove_additional_option()
     {
         var subscriptionService = new SubscriptionService(null, null);
-        var guid = subscriptionService.CreateAdditionOption("option1", "description");
+        var guid = subscriptionService.CreateAdditionalOption("option1", "description", Convert.ToDecimal(50));
 
-        subscriptionService.RemoveAdditionOption(guid);
+        subscriptionService.RemoveAdditionalOption(guid);
 
         Assert.Empty(subscriptionService.GetAdditionalOptions());
     }
@@ -208,12 +205,12 @@ public class SubscriptionServiceChecking
     public void Remove_specified_not_single_additional_option()
     {
         var subscriptionService = new SubscriptionService(null, null);
-        var additionalOption1 = new Tuple<string, string>("addOption1", "description1");
-        var additionalOption2 = new Tuple<string, string>("addOption2", "description2");
-        var guidNotRemove = subscriptionService.CreateAdditionOption(additionalOption1.Item1, additionalOption1.Item2);
-        var guidToRemove = subscriptionService.CreateAdditionOption(additionalOption2.Item1, additionalOption2.Item2);
+        var additionalOption1 = new Tuple<string, string, decimal>("addOption1", "description1", Convert.ToDecimal(50));
+        var additionalOption2 = new Tuple<string, string, decimal>("addOption2", "description2", Convert.ToDecimal(50));
+        var guidNotRemove = subscriptionService.CreateAdditionalOption(additionalOption1.Item1, additionalOption1.Item2, additionalOption1.Item3);
+        var guidToRemove = subscriptionService.CreateAdditionalOption(additionalOption2.Item1, additionalOption2.Item2, additionalOption2.Item3);
 
-        subscriptionService.RemoveAdditionOption(guidToRemove);
+        subscriptionService.RemoveAdditionalOption(guidToRemove);
 
         Assert.NotEmpty(subscriptionService.GetAdditionalOptions());
         Assert.Equal(subscriptionService.GetAdditionalOptions().First().Item1, guidNotRemove);

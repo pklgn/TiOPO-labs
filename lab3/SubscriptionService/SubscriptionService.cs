@@ -3,7 +3,7 @@
 
 namespace Subscription;
 
-using AdditionalOption = Tuple<Guid, string>;
+using AdditionalOptionWithCost = Tuple<Guid, string, decimal>;
 
 public interface IBenefitService
 {
@@ -21,19 +21,19 @@ public class SubscriptionService
     private IBenefitService _benefitService;
     private IEmailSender _emailSender;
 
-    private const decimal _standartRate = 100;
+    private const decimal _standartCost = 100;
 
-    //ежемесячная базовая стоимость
-    private decimal _monthlyRate;
+    //ежемесячная стоимость
+    private decimal _monthlyCost;
 
     //дополнительные опции подписки
-    private List<AdditionalOption> _additionalOptions = new List<Tuple<Guid, string>>();
+    private List<AdditionalOptionWithCost> _additionalOptions = new List<Tuple<Guid, string, decimal>>();
 
-    public SubscriptionService(IBenefitService benefitService, IEmailSender emailSender, decimal monthlyRate = _standartRate)
+    public SubscriptionService(IBenefitService benefitService, IEmailSender emailSender, decimal monthlyRate = _standartCost)
     {
         _benefitService = benefitService;
         _emailSender = emailSender;
-        _monthlyRate = monthlyRate;
+        _monthlyCost = monthlyRate;
     }
 
     public string SearchBenefitFromCategory(string keyword, Guid categoryId)
@@ -67,34 +67,34 @@ public class SubscriptionService
         _emailSender.SendEmail(recipient, subject, body);
     }
 
-    public decimal CalculatePriceForPeriod(DateTime periodStart, DateTime periodEnd)
+    public decimal CalculateDateTimeRangeCost(DateTime rangeBegin, DateTime rangeEnd)
     {
         //FIXED: логика того, что подписка не может быть меньше чем на месяц
-        if (periodStart > periodEnd)
+        if (rangeBegin > rangeEnd)
         {
-            throw new ArgumentException("Start period must precede end period value");
+            throw new ArgumentException("Begin range value must precede end range value");
         }
 
-        var periodInMonths = GetDiffInMonths(periodStart, periodEnd);
+        var rangeInMonths = GetDiffInMonths(rangeBegin, rangeEnd);
 
-        if (periodInMonths == 0)
+        if (rangeInMonths == 0)
         {
             throw new Exception("The difference between the periods cannot be less than one month");
         }
 
-        return _monthlyRate * periodInMonths;
+        return _monthlyCost * rangeInMonths;
     }
 
-    public Guid CreateAdditionOption(string name, string decription)
+    public Guid CreateAdditionalOption(string name, string decription, decimal monthlyCost)
     {
         Guid guid = Guid.NewGuid();
         string additionalOptionString = $"{name}: {decription}";
-        _additionalOptions.Add(new AdditionalOption(guid, additionalOptionString));
+        _additionalOptions.Add(new AdditionalOptionWithCost(guid, additionalOptionString, monthlyCost));
 
         return guid;
     }
 
-    public void RemoveAdditionOption(Guid additionalOptionGuid)
+    public void RemoveAdditionalOption(Guid additionalOptionGuid)
     {
         var optionToRemove = _additionalOptions.Where(option => option.Item1 == additionalOptionGuid).FirstOrDefault();
         if (optionToRemove != null)
@@ -103,7 +103,7 @@ public class SubscriptionService
         }
     }
 
-    public IEnumerable<AdditionalOption> GetAdditionalOptions()
+    public IEnumerable<AdditionalOptionWithCost> GetAdditionalOptions()
     {
         return _additionalOptions;
     }
