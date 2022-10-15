@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+п»ї// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace TestsSubscriptionService;
@@ -12,7 +12,7 @@ public class SubscriptionServiceTests
 {
     private SubscriptionService _subscriptionService;
 
-    //FIXED: вынес инициализацию объектов из каждого отдельного теста: сделал ее общей для всех тестов
+    //FIXED: РІС‹РЅРµСЃ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РѕР±СЉРµРєС‚РѕРІ РёР· РєР°Р¶РґРѕРіРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ С‚РµСЃС‚Р°: СЃРґРµР»Р°Р» РµРµ РѕР±С‰РµР№ РґР»СЏ РІСЃРµС… С‚РµСЃС‚РѕРІ
     private Mock<IBenefitService> _benefitServiceStub = new Mock<IBenefitService>();
     private Mock<IEmailSender> _emailSenderStub = new Mock<IEmailSender>();
 
@@ -40,7 +40,7 @@ public class SubscriptionServiceTests
         //act
         IEnumerable<string> benefits = _subscriptionService.GetAllBenefitsForCategory(entertainmentCategoryGuid);
 
-        //FIXED: проверяю размер списка и его содержимое
+        //FIXED: РїСЂРѕРІРµСЂСЏСЋ СЂР°Р·РјРµСЂ СЃРїРёСЃРєР° Рё РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ
         //assert
         Assert.Equal(3, benefits.Count());
         Assert.Equal(benefits.First(), firstBenefit);
@@ -136,7 +136,7 @@ public class SubscriptionServiceTests
         var periodStart = new DateTime(2022, 10, 5, 23, 59, 59);
         var periodEnd = new DateTime(2022, 10, 4, 0, 59, 59);
 
-        //Объединил два этапа как в примере https://stackoverflow.com/questions/45017295/assert-an-exception-using-xunit
+        //РћР±СЉРµРґРёРЅРёР» РґРІР° СЌС‚Р°РїР° РєР°Рє РІ РїСЂРёРјРµСЂРµ https://stackoverflow.com/questions/45017295/assert-an-exception-using-xunit
         //act & assert
         Assert.Throws<ArgumentException>(() => _subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd));
     }
@@ -265,7 +265,7 @@ public class SubscriptionServiceTests
 
         //assert
         Assert.NotEmpty(_subscriptionService.GetAdditionalOptions());
-        //FIXED: обращаюсь по определенному индексу
+        //FIXED: РѕР±СЂР°С‰Р°СЋСЃСЊ РїРѕ РѕРїСЂРµРґРµР»РµРЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ
         Assert.Equal(_subscriptionService.GetAdditionalOptions().ToList()[1].Item1, remainingGuid);
         Assert.Equal("addOption3: description3", _subscriptionService.GetAdditionalOptions().ToList()[1].Item2);
     }
