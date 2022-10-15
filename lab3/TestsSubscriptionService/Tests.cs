@@ -292,7 +292,7 @@ public class SubscriptionServiceTests
         //act
         _subscriptionService.SetMonthlyCost(200);
 
-        //arrange
+        //assert
         Assert.Equal(expectedNewMonthlyCost, _subscriptionService.GetMonthlyCost());
     }
 
@@ -311,7 +311,7 @@ public class SubscriptionServiceTests
         //act
         var statusCode = _subscriptionService.SendEmail(emptyRecipentAddress, "notification");
 
-        //arrange
+        //assert
         Assert.Equal(statusCode, mailboxUnavailableStatusCode);
     }
 
@@ -329,7 +329,7 @@ public class SubscriptionServiceTests
         //act
         var statusCode = _subscriptionService.SendEmail(recipentAddress, "notification");
 
-        //arrange
+        //assert
         Assert.Equal(statusCode, (int)HttpStatusCode.OK);
     }
 }
