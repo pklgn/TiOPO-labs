@@ -13,7 +13,7 @@ public interface IBenefitService
 
 public interface IEmailSender
 {
-    public void SendEmail(string recipient, string subject, string body);
+    public int SendEmail(string recipient, string subject, string body);
 }
 
 public class SubscriptionService
@@ -82,12 +82,15 @@ public class SubscriptionService
     /// <summary>
     /// Create default service subject for the email and paste specified notification into the email body.
     /// </summary>
-    public void SendEmail(string recipient, string notification)
+    /// <returns>
+    /// Status code of the sending
+    /// </returns>
+    public int SendEmail(string recipient, string notification)
     {
         string subject = "Subscription service updates";
         string body = $"Hi,\n{notification}.\nSincerely, the service team.";
 
-        _emailSender.SendEmail(recipient, subject, body);
+        return _emailSender.SendEmail(recipient, subject, body);
     }
 
     /// <summary>
