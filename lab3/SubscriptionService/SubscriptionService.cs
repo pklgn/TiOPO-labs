@@ -42,17 +42,12 @@ public class SubscriptionService
     /// </summary>
     /// <returns>
     /// String that represent first found value.
-    /// If nothing found returns an empty string.
+    /// If nothing found returns null.
     /// </returns>
-    public string SearchBenefitFromCategory(string keyword, Guid categoryId)
+    public string? SearchBenefitFromCategory(string keyword, Guid categoryId)
     {
         var benefits = _benefitService.GetBenefitsForCategory(categoryId);
         var appropriateBenefit = benefits.Where(benefit => benefit.ToLower().Contains(keyword)).FirstOrDefault();
-
-        if (appropriateBenefit == null)
-        {
-            return "";
-        }
 
         return appropriateBenefit;
     }
@@ -142,10 +137,12 @@ public class SubscriptionService
     public void RemoveAdditionalOption(Guid additionalOptionGuid)
     {
         var optionToRemove = _additionalOptions.Where(option => option.Item1 == additionalOptionGuid).FirstOrDefault();
-        if (optionToRemove != null)
+        if (optionToRemove == null)
         {
-            _additionalOptions.Remove(optionToRemove);
+            throw new ArgumentException("A non-existent Guid was specified");
         }
+
+        _additionalOptions.Remove(optionToRemove);
     }
 
     /// <summary>
