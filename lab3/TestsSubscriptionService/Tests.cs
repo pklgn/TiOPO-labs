@@ -12,7 +12,6 @@ public class SubscriptionServiceTests
 {
     private SubscriptionService _subscriptionService;
 
-    //FIXED: вынес инициализацию объектов из каждого отдельного теста: сделал ее общей для всех тестов
     private Mock<IBenefitService> _benefitServiceStub = new Mock<IBenefitService>();
     private Mock<IEmailSender> _emailSenderStub = new Mock<IEmailSender>();
 
@@ -21,9 +20,9 @@ public class SubscriptionServiceTests
         _subscriptionService = new SubscriptionService(_benefitServiceStub.Object, _emailSenderStub.Object);
     }
 
-
+    //FIXED: изменил названия тест-кейсов
     [Fact]
-    public void GetBenefitsForCategory_returns_list_of_available_benefits()
+    public void Get_benefits_for_category_as_a_list_of_available_benefits()
     {
         //arrange
         Guid entertainmentCategoryGuid = Guid.NewGuid();
@@ -40,14 +39,14 @@ public class SubscriptionServiceTests
         //act
         IEnumerable<string> benefits = _subscriptionService.GetAllBenefitsForCategory(entertainmentCategoryGuid);
 
-        //FIXED: проверяю размер списка и его содержимое
+        //FIXED: исправил порядок assert на expected-actual
         //assert
         Assert.Equal(3, benefits.Count());
-        Assert.Equal(benefits.First(), firstBenefit);
+        Assert.Equal(firstBenefit, benefits.First());
     }
 
     [Fact]
-    public void SearchBenefitFromCategory_returns_single_appropriate_benefit()
+    public void Search_benefit_from_category_returns_single_appropriate_benefit()
     {
         //arrange
         Guid entertainmentCategoryGuid = Guid.NewGuid();
@@ -63,14 +62,14 @@ public class SubscriptionServiceTests
             });
 
         //act
-        string foundBenefit = _subscriptionService.SearchBenefitFromCategory(footballBenefitKeyword, entertainmentCategoryGuid);
+        string? foundBenefit = _subscriptionService.SearchBenefitFromCategory(footballBenefitKeyword, entertainmentCategoryGuid);
 
         //assert
         Assert.Equal(footballBenefit, foundBenefit);
     }
 
     [Fact]
-    public void SearchBenefitFromCategory_returns_first_found_benefit_when_several_approprtate_exist()
+    public void Search_benefit_from_category_returns_first_found_benefit_when_several_approprtate_exist()
     {
         //arrange
         Guid entertainmentCategoryGuid = Guid.NewGuid();
@@ -85,14 +84,14 @@ public class SubscriptionServiceTests
             });
 
         //act
-        string foundBenefit = _subscriptionService.SearchBenefitFromCategory("movies", entertainmentCategoryGuid);
+        string? foundBenefit = _subscriptionService.SearchBenefitFromCategory("movies", entertainmentCategoryGuid);
 
         //assert
         Assert.Equal(movieBenefit, foundBenefit);
     }
 
     [Fact]
-    public void SearchBenefitFromCategory_returns_nothing_when_no_approprtate_benefit_exist()
+    public void Search_benefit_from_category_returns_nothing_when_no_approprtate_benefit_exist()
     {
         //arrange
         Guid entertainmentCategoryGuid = Guid.NewGuid();
@@ -106,14 +105,31 @@ public class SubscriptionServiceTests
             });
 
         //act
-        string foundBenefit = _subscriptionService.SearchBenefitFromCategory("sport", entertainmentCategoryGuid);
+        string? foundBenefit = _subscriptionService.SearchBenefitFromCategory("sport", entertainmentCategoryGuid);
 
         //assert
-        Assert.Empty(foundBenefit);
+        Assert.Null(foundBenefit);
+    }
+
+    //FIXED: добавил поиск в пустом списке
+    [Fact]
+    public void Search_benefit_from_category_in_empty_list()
+    {
+        //arrange
+        Guid entertainmentCategoryGuid = Guid.NewGuid();
+        _benefitServiceStub
+            .Setup(x => x.GetBenefitsForCategory(entertainmentCategoryGuid))
+            .Returns(new List<string>{});
+
+        //act
+        string? foundBenefit = _subscriptionService.SearchBenefitFromCategory("sport", entertainmentCategoryGuid);
+
+        //assert
+        Assert.Null(foundBenefit);
     }
 
     [Fact]
-    public void GetBenefitExpireDateTime_returns_dateTime()
+    public void Get_benefit_expire_datetime_returns_datetime()
     {
         //arrange
         Guid benefitGuid = Guid.NewGuid();
@@ -159,10 +175,10 @@ public class SubscriptionServiceTests
         var expectedMonthlyCost = 100;
 
         //act
-        var monthlyCost = _subscriptionService.GetMonthlyCost();
+        var actualMonthlyCost = _subscriptionService.GetMonthlyCost();
 
         //assert
-        Assert.Equal(monthlyCost, expectedMonthlyCost);
+        Assert.Equal(expectedMonthlyCost, actualMonthlyCost);
     }
 
     [Fact]
@@ -171,13 +187,13 @@ public class SubscriptionServiceTests
         //arrange
         var periodStart = new DateTime(2022, 10, 5, 12, 58, 50);
         var periodEnd = new DateTime(2022, 12, 1, 0, 56, 42);
-        var expectedPrice = _subscriptionService.GetMonthlyCost() * 2;
+        var expectedPrice = 200;
 
         //act
-        var price = _subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
+        var actualPrice = _subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
 
         //assert
-        Assert.Equal(price, expectedPrice);
+        Assert.Equal(expectedPrice, actualPrice);
     }
 
     [Fact]
@@ -186,13 +202,30 @@ public class SubscriptionServiceTests
         //arrange
         var periodStart = new DateTime(2022, 1, 5, 23, 18, 11);
         var periodEnd = new DateTime(2022, 2, 5, 23, 18, 11);
-        var oneMonthPrice = _subscriptionService.GetMonthlyCost();
+        //FIXED заменил использование GetMonthlyCost на константу
+        var oneMonthPrice = 100;
 
         //act
         var actualPrice = _subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
 
         //assert
-        Assert.Equal(actualPrice, oneMonthPrice);
+        Assert.Equal(oneMonthPrice, actualPrice);
+    }
+
+    [Fact]
+    public void Calculate_subscription_price_for_one_year()
+    {
+        //arrange
+        var periodStart = new DateTime(2022, 1, 5, 23, 18, 11);
+        var periodEnd = new DateTime(2023, 2, 5, 23, 18, 11);
+        //FIXED заменил использование GetMonthlyCost на константу
+        var expectedPrice = 1300;
+
+        //act
+        var actualPrice = _subscriptionService.CalculateDateTimeRangeCost(periodStart, periodEnd);
+
+        //assert
+        Assert.Equal(expectedPrice, actualPrice);
     }
 
     [Fact]
@@ -210,10 +243,11 @@ public class SubscriptionServiceTests
     public void Add_additional_option_in_appropriate_format()
     {
         //arrange
-        var firstAdditionalOption = new Tuple<string, string, decimal>("firstOption", "description", Convert.ToDecimal(50));
+        //FIXED: переименовал из Item1, Item2, Item3
+        (string name, string desc, decimal cost) additionalOption = ("firstOption", "description", Convert.ToDecimal(50));
 
         //act
-        _subscriptionService.CreateAdditionalOption(firstAdditionalOption.Item1, firstAdditionalOption.Item2, firstAdditionalOption.Item3);
+        _subscriptionService.CreateAdditionalOption(additionalOption.name, additionalOption.desc, additionalOption.cost);
 
         //assert
         Assert.Equal("firstOption: description", _subscriptionService.GetAdditionalOptions().First().Item2);
@@ -224,16 +258,18 @@ public class SubscriptionServiceTests
     public void Add_several_additional_options()
     {
         //arrange
-        var additionalOption1 = new Tuple<string, string, decimal>("option1", "description1", Convert.ToDecimal(60));
-        var additionalOption2 = new Tuple<string, string, decimal>("option2", "description2", Convert.ToDecimal(70));
+        (string name, string desc, decimal cost) additionalOption1 = ("option1", "description1", Convert.ToDecimal(60));
+        (string name, string desc, decimal cost) additionalOption2 = ("option2", "description2", Convert.ToDecimal(70));
 
         //act
-        _subscriptionService.CreateAdditionalOption(additionalOption1.Item1, additionalOption1.Item2, additionalOption1.Item3);
-        _subscriptionService.CreateAdditionalOption(additionalOption2.Item1, additionalOption2.Item2, additionalOption2.Item3);
+        var guid1 = _subscriptionService.CreateAdditionalOption(additionalOption1.name, additionalOption1.desc, additionalOption1.cost);
+        _subscriptionService.CreateAdditionalOption(additionalOption2.name, additionalOption2.desc, additionalOption2.cost);
 
         //assert
         Assert.Equal(2, _subscriptionService.GetAdditionalOptions().Count());
         Assert.Equal($"{additionalOption1.Item1}: {additionalOption1.Item2}", _subscriptionService.GetAdditionalOptions().First().Item2);
+        //FIXED: добавил проверку для Item1
+        Assert.Equal(guid1, _subscriptionService.GetAdditionalOptions().First().Item1);
     }
 
     [Fact]
@@ -253,21 +289,23 @@ public class SubscriptionServiceTests
     public void Remove_specified_not_single_additional_option()
     {
         //arrange
-        var additionalOption1 = new Tuple<string, string, decimal>("addOption1", "description1", Convert.ToDecimal(10));
-        var additionalOption2 = new Tuple<string, string, decimal>("addOption2", "description2", Convert.ToDecimal(20));
-        var additionalOption3 = new Tuple<string, string, decimal>("addOption3", "description3", Convert.ToDecimal(30));
-        var guidToRemove = _subscriptionService.CreateAdditionalOption(additionalOption1.Item1, additionalOption1.Item2, additionalOption1.Item3);
-        _subscriptionService.CreateAdditionalOption(additionalOption2.Item1, additionalOption2.Item2, additionalOption2.Item3);
-        var remainingGuid = _subscriptionService.CreateAdditionalOption(additionalOption3.Item1, additionalOption3.Item2, additionalOption3.Item3);
+        (string name, string desc, decimal cost) additionalOption1 = ("addOption1", "description1", Convert.ToDecimal(10));
+        (string name, string desc, decimal cost) additionalOption2 = ("addOption2", "description2", Convert.ToDecimal(20));
+        (string name, string desc, decimal cost) additionalOption3= ("addOption3", "description3", Convert.ToDecimal(30));
+        var guidToRemove = _subscriptionService.CreateAdditionalOption(additionalOption1.name, additionalOption1.desc, additionalOption1.cost);
+        var remainingGuid2 = _subscriptionService.CreateAdditionalOption(additionalOption2.name, additionalOption2.desc, additionalOption2.cost);
+        var remainingGuid3 = _subscriptionService.CreateAdditionalOption(additionalOption3.name, additionalOption3.desc, additionalOption3.cost);
 
         //act
         _subscriptionService.RemoveAdditionalOption(guidToRemove);
 
         //assert
         Assert.NotEmpty(_subscriptionService.GetAdditionalOptions());
-        //FIXED: обращаюсь по определенному индексу
-        Assert.Equal(_subscriptionService.GetAdditionalOptions().ToList()[1].Item1, remainingGuid);
+        Assert.Equal(remainingGuid3, _subscriptionService.GetAdditionalOptions().ToList()[1].Item1);
         Assert.Equal("addOption3: description3", _subscriptionService.GetAdditionalOptions().ToList()[1].Item2);
+        //FIXED: добавил проверку для второго оставшегося элемента
+        Assert.Equal(remainingGuid2, _subscriptionService.GetAdditionalOptions().ToList()[0].Item1);
+        Assert.Equal("addOption2: description2", _subscriptionService.GetAdditionalOptions().ToList()[0].Item2);
     }
 
     [Fact]
@@ -276,11 +314,21 @@ public class SubscriptionServiceTests
         //arrange
         var foreignGuid = Guid.NewGuid();
 
-        //act
-        _subscriptionService.RemoveAdditionalOption(foreignGuid);
+        //act & assert
+        //FIXED: бросаю исключение при попытке удаления несуществующего элемента
+        Assert.Throws<ArgumentException>(() => _subscriptionService.RemoveAdditionalOption(foreignGuid));
+    }
 
-        //assert
-        Assert.Empty(_subscriptionService.GetAdditionalOptions());
+    [Fact]
+    public void Remove_not_existing_element_from_additional_list()
+    {
+        //arrange
+        var foreignGuid = Guid.NewGuid();
+        (string name, string desc, decimal cost) additionalOption = ("addOption1", "description1", Convert.ToDecimal(1000));
+
+        //act & assert
+        //FIXED: бросаю исключение при попытке удаления несуществующего элемента
+        Assert.Throws<ArgumentException>(() => _subscriptionService.RemoveAdditionalOption(foreignGuid));
     }
 
     [Fact]
@@ -290,9 +338,10 @@ public class SubscriptionServiceTests
         var expectedNewMonthlyCost = 200;
 
         //act
-        _subscriptionService.SetMonthlyCost(200);
+        //FIXED: использую константу
+        _subscriptionService.SetMonthlyCost(expectedNewMonthlyCost);
 
-        //arrange
+        //assert
         Assert.Equal(expectedNewMonthlyCost, _subscriptionService.GetMonthlyCost());
     }
 
@@ -302,17 +351,16 @@ public class SubscriptionServiceTests
         //arrange
         var mailboxUnavailableStatusCode = 550;
         var emptyRecipentAddress = "";
-        var subject = "Subscription service updates";
-        var body = "Hi,\nnotification.\nSincerely, the service team.";
+        //FIXED: заменил конкретные переменные на It.IsAny<string>()
         _emailSenderStub
-            .Setup(x => x.SendEmail(emptyRecipentAddress, subject, body))
+            .Setup(x => x.SendEmail(emptyRecipentAddress, It.IsAny<string>(), It.IsAny<string>()))
             .Returns(mailboxUnavailableStatusCode);
 
         //act
-        var statusCode = _subscriptionService.SendEmail(emptyRecipentAddress, "notification");
+        var actualStatusCode = _subscriptionService.SendEmail(emptyRecipentAddress, "notification");
 
-        //arrange
-        Assert.Equal(statusCode, mailboxUnavailableStatusCode);
+        //assert
+        Assert.Equal(mailboxUnavailableStatusCode, actualStatusCode);
     }
 
     [Fact]
@@ -320,16 +368,14 @@ public class SubscriptionServiceTests
     {
         //arrange
         var recipentAddress = "test@mail.com";
-        var subject = "Subscription service updates";
-        var body = "Hi,\nnotification.\nSincerely, the service team.";
         _emailSenderStub
-            .Setup(x => x.SendEmail(recipentAddress, subject, body))
+            .Setup(x => x.SendEmail(recipentAddress, It.IsAny<string>(), It.IsAny<string>()))
             .Returns((int)HttpStatusCode.OK);
 
         //act
-        var statusCode = _subscriptionService.SendEmail(recipentAddress, "notification");
+        var actualStatusCode = _subscriptionService.SendEmail(recipentAddress, "notification");
 
-        //arrange
-        Assert.Equal(statusCode, (int)HttpStatusCode.OK);
+        //assert
+        Assert.Equal((int)HttpStatusCode.OK, actualStatusCode);
     }
 }
