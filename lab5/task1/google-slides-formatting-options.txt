@@ -1,6 +1,6 @@
 Size: 0, 50, 100
 KeepAspectRatio: True, False
-Rotation: 0, 90, 180, 270, 360
+Rotation: 0, 90, 180, 270.8, 360
 PositionStart: Center, LeftUp
 PositionValue: Negative, Zero, Positive
 Alignment: Left, Right
@@ -11,7 +11,7 @@ Fields: Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight
 Shadow: True, False
 ShadowColor: None, Red, Green, Blue
 ShadowTransparency: 0, 50, 100
-ShadowAngle: 0, 90, 180, 270, 360
+ShadowAngle: 0, 90, 180, 270.8, 360
 ShadowDistance: 0, 50, 100
 ShadowRadius: 0, 50, 100
 Reflection: True, False

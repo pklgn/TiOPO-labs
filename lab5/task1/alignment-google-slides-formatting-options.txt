@@ -1,0 +1,29 @@
+Size: Default
+KeepAspectRatio: Default
+Rotation: Default
+PositionStart: Default
+PositionValue: Default
+AlignmentLeft: Min, Max
+AlignmentLeftValue: -0.25, 2
+AlignmentRight: Min, Max
+AlignmentRightValue:
+SpecialAlignment: Default
+SpecialAlignmentValue: Default
+AutoScaling: Default
+Fields: Default
+Shadow: Default
+ShadowColor: Default
+ShadowTransparency: Default
+ShadowAngle: Default
+ShadowDistance: Default
+ShadowRadius: Default
+Reflection: Default
+ReflectionTransparency: Default 
+ReflectionDistance: Default
+ReflectionSize: Default
+
+IF [AlignmentLeft] = "Min" THEN [AlignmentLeftValue] = -0.25
+IF [AlignmentLeft] = "Max" THEN [AlignmentLeftValue] = 2
+
+IF [AlignmentRight] = "Min" THEN [AlignmentRightValue] = -5.99
+IF [AlignmentRightValue] = "Max" THEN [AlignmentRightValue] = 20.84
