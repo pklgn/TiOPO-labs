@@ -1,0 +1,38 @@
+SizeWidthAbsolute: 0.01, 0.23, 0.24, 23.67, 149130
+SizeWidthPercentage: -1, 0.9, 1, 100, 630086
+SizeHeightAbsolute: 0.01, 0.08, 0.09, 9.49, 149130
+SizeHeightPercentage: -1, 0.9, 1, 100, 1571453
+KeepAspectRatio: True, False
+Rotation: 0, 90, 180, 270.1, 360
+Reflecttion: Horizontal, Vertical, None
+PositionStart: Default
+PositionValue: Default
+Alignment: Default
+SpecialAlignment: Default
+SpecialAlignmentValue: Default
+AutoScaling: Default
+Fields: Default
+Shadow: Default
+ShadowColor: Default
+ShadowTransparency: Default
+ShadowAngle: Default
+ShadowDistance: Default
+ShadowRadius: Default
+Reflection: Default
+ReflectionTransparency: Default
+ReflectionDistance: Default
+ReflectionSize: Default
+
+IF [SizeWidthAbsolute] = 0.01 THEN [SizeWidthPercentage] = -1;
+IF [SizeWidthAbsolute] = 0.23 THEN [SizeWidthPercentage] = -1;
+IF [SizeWidthAbsolute] = 0.24 THEN [SizeWidthPercentage] = 1;
+IF [SizeWidthAbsolute] = 23.67 THEN [SizeWidthPercentage] = 100;
+IF [SizeWidthAbsolute] = 149130 THEN [SizeWidthPercentage] = 630086;
+IF [SizeWidthPercentage] = 0.9 THEN [SizeWidthPercentage] = 1;
+
+IF [SizeHeightAbsolute] = 0.01 THEN [SizeHeightPercentage] = -1;
+IF [SizeHeightAbsolute] = 0.08 THEN [SizeHeightPercentage] = -1;
+IF [SizeHeightAbsolute] = 0.09 THEN [SizeHeightPercentage] = 1;
+IF [SizeHeightAbsolute] = 9.49 THEN [SizeHeightPercentage] = 100;
+IF [SizeHeightAbsolute] = 149130 THEN [SizeHeightPercentage] = 1571453;
+IF [SizeHeightPercentage] = 0.9 THEN [SizeHeightPercentage] = 1;
