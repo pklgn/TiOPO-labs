@@ -1,0 +1,29 @@
+SizeWidthAbsolute: Default
+SizeWidthPercentage: Default
+SizeHeightAbsolute: Default
+SizeHeightPercentage: Default
+KeepAspectRatio: Default
+Rotation: Default
+Reflecttion: Default
+PositionStart: Default
+PositionValueOX: Default
+PositionValueOY: Default
+MarginLeft: -1.12, 0, 22.84
+MarginRight: -1.02, 0, 22.84
+SpecialAlignment: None, FirstLine, Trailing
+SpecialAlignmentValue: None, PositiveMin, PositiveMax
+AutoScaling: None, ReduceOverlapText, AdjustToText
+FieldsUp: 0, 8.91
+FieldsDown: 0, 8.91
+FieldsLeft: 0, 23
+FieldsRight: 0, 23
+Shadow: Default
+ShadowColor: Default
+ShadowTransparency: Default
+ShadowAngle: Default
+ShadowDistance: Default
+ShadowRadius: Default
+Reflection: Default
+ReflectionTransparency: Default
+ReflectionDistance: Default
+ReflectionSize: Default

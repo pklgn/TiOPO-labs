@@ -1,0 +1,38 @@
+SizeWidthAbsolute: Default
+SizeWidthPercentage: Default
+SizeHeightAbsolute: Default
+SizeHeightPercentage: Default
+KeepAspectRatio: Default
+Rotation: Default
+Reflecttion: Default
+PositionStart: Center, LeftUp
+PositionValueOX: -149130, 0, 149130
+PositionValueOY: -149130, 0, 149130
+Alignment: Left, Right
+SpecialAlignment: None, FirstLine, Trailing
+SpecialAlignmentValue: None, Positive
+AutoScaling: None, ReduceOverlapText, AdjustToText
+Fields: Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight
+Shadow: True, False
+ShadowColor: None, Red, Green, Blue
+ShadowTransparency: 0, 50, 100
+ShadowAngle: 0, 90, 180, 270, 360
+ShadowDistance: 0, 50, 100
+ShadowRadius: 0, 50, 100
+Reflection: True, False
+ReflectionTransparency: 0, 50, 100 
+ReflectionDistance: 0, 50, 100
+ReflectionSize: 0, 50, 100
+
+IF [SpecialAlignment] = "None" THEN [SpecialAlignmentValue] = "None";
+
+IF [Shadow] = "False" THEN [ShadowTransparency] = 0;
+IF [Shadow] = "False" THEN [ShadowAngle] = 0;
+IF [Shadow] = "False" THEN [ShadowDistance] = 0;
+IF [Shadow] = "False" THEN [ShadowRadius] = 0;
+IF [Shadow] = "False" THEN [ShadowColor] = "None";
+
+
+IF [Reflection] = "False" THEN [ReflectionTransparency] = 0;
+IF [Reflection] = "False" THEN [ReflectionDistance] = 0;
+IF [Reflection] = "False" THEN [ReflectionSize] = 0;
