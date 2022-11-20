@@ -4,7 +4,7 @@ SizeHeightAbsolute: Default
 SizeHeightPercentage: Default
 KeepAspectRatio: Default
 Rotation: Default
-Reflecttion: Default
+ReflectionTransform: Default
 PositionStart: Default
 PositionValueOX: Default
 PositionValueOY: Default
@@ -27,3 +27,5 @@ Reflection: Default
 ReflectionTransparency: Default
 ReflectionDistance: Default
 ReflectionSize: Default
+
+IF [SpecialAlignment] = "None" THEN [SpecialAlignmentValue] = "None";

@@ -1,13 +1,22 @@
-Size: 0, 50, 100
-KeepAspectRatio: True, False
-Rotation: 0, 90, 180, 270.8, 360
+SizeWidthAbsolute: Default
+SizeWidthPercentage: Default
+SizeHeightAbsolute: Default
+SizeHeightPercentage: Default
+KeepAspectRatio: Default
+Rotation: Default
+ReflectionTransform: Default
 PositionStart: Center, LeftUp
-PositionValue: Negative, Zero, Positive
-Alignment: Left, Right
-SpecialAlignment: None, FirstLine, Trailing
-SpecialAlignmentValue: None, Positive
-AutoScaling: None, ReduceOverlapText, AdjustToText
-Fields: Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight
+PositionValueOX: -149130, 0.5, 149130
+PositionValueOY: -149130, 0.5, 149130
+MarginLeft: Default
+MarginRight: Default
+SpecialAlignment: Default
+SpecialAlignmentValue: Default
+AutoScaling: Default
+FieldsUp: Default
+FieldsDown: Default
+FieldsLeft: Default
+FieldsRight: Default
 Shadow: True, False
 ShadowColor: None, Red, Green, Blue
 ShadowTransparency: 0, 50, 100
@@ -18,8 +27,6 @@ Reflection: True, False
 ReflectionTransparency: 0, 50, 100 
 ReflectionDistance: 0, 50, 100
 ReflectionSize: 0, 50, 100
-
-IF [SpecialAlignment] = "None" THEN [SpecialAlignmentValue] = "None";
 
 IF [Shadow] = "False" THEN [ShadowTransparency] = 0;
 IF [Shadow] = "False" THEN [ShadowAngle] = 0;

@@ -4,14 +4,19 @@ SizeHeightAbsolute: 0.01, 0.08, 0.09, 9.49, 149130
 SizeHeightPercentage: -1, 0.9, 1, 100, 1571453
 KeepAspectRatio: True, False
 Rotation: 0, 90, 180, 270.1, 360
-Reflecttion: Horizontal, Vertical, None
+ReflectionTransform: Horizontal, Vertical, None
 PositionStart: Default
-PositionValue: Default
-Alignment: Default
+PositionValueOX: Default
+PositionValueOY: Default
+MarginLeft: Default
+MarginRight: Default
 SpecialAlignment: Default
 SpecialAlignmentValue: Default
 AutoScaling: Default
-Fields: Default
+FieldsUp: Default
+FieldsDown: Default
+FieldsLeft: Default
+FieldsRight: Default
 Shadow: Default
 ShadowColor: Default
 ShadowTransparency: Default
