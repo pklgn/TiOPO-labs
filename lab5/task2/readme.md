@@ -2,4 +2,4 @@
 
 Диаграмма состояний для пинкода abcd, в котором могут быть только цифры
 
-![Диаграмма](https://lh5.googleusercontent.com/hv0BJtWV0G5JmBWw8exkMUPo1qK9xKhWWnJGaWjhGrX8aq2aofT7gZb6IUVrC2fudeE=w2400)
+![Диаграмма](https://lh4.googleusercontent.com/ktp3jz0GWBhq124r7ZNpkyKGfNw0nl2D0f6jtbrR2BuwttsdaJsECAmethBEMRylFB8=w2400)
