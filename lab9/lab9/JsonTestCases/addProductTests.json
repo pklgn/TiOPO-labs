@@ -1,0 +1,68 @@
+{
+    "valid": {
+        "category_id": "1",
+        "title": "ValidProductTitle",
+        "content": "ValidProductContent",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    },
+    "invalidByCategoryIdLess": {
+        "category_id": "0",
+        "title": "InvalidProductCategoryIdLessTitle",
+        "content": "InvalidProductCategoryIdLessContent",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    },
+    "invalidByCategoryIdMore": {
+        "category_id": "16",
+        "title": "InvalidProductCategoryIdMore",
+        "content": "InvalidProductCategoryIdMoreContent",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    },
+    "validWithRussianTitle": {
+        "category_id": "1",
+        "title": "Тайтл",
+        "content": "Контент на русском",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    },
+    "validWithWatchTitle": {
+        "category_id": "1",
+        "title": "Премиум часы1",
+        "content": "Контент про часы на русском",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    },
+    "validProductToFurtherEdit": {
+        "category_id": "1",
+        "title": "ValidProductToFurtherEditTitle",
+        "content": "ValidProductToFurtherEditContent",
+        "price": "300",
+        "old_price": "301",
+        "status": "1",
+        "keywords": "Something",
+        "description": "Description",
+        "hit": "0"
+    }
+}
