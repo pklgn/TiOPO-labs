@@ -1,0 +1,13 @@
+{
+    "id": "addProductResponse",
+    "description": "Response when client add new product",
+    "type": "object",
+    "properties": {
+        "status": {
+            "type": "integer"
+        },
+        "id": {
+            "type": "integer"
+        }
+    }
+}
