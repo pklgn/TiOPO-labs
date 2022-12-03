@@ -23,7 +23,6 @@ public class JsonValidator
 
         if (!json.IsValid(schema))
         {
-            //TODO: add custom exception
             wasSuccess = false;
             throw new Exception("Object schema doesn't match target schema");
         }
