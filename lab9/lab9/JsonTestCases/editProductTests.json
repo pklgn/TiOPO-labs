@@ -10,7 +10,7 @@
         "description": "DescriptionNew",
         "hit": "1"
     },
-    "validWithForeignId": {
+    "validWithNotExistingId": {
         "id": "77779",
         "category_id": "2",
         "title": "NewwwItemTitle",
@@ -23,18 +23,6 @@
         "hit": "1"
     },
     "validWithoutId": {
-        "category_id": "2",
-        "title": "NewwwwItemTitleWithoutId",
-        "content": "ContentContent",
-        "price": "305",
-        "old_price": "307",
-        "status": "0",
-        "keywords": "SomethingNew",
-        "description": "DescriptionNew",
-        "hit": "1"
-    },
-    "validWithWrongId": {
-        "id": "77800",
         "category_id": "2",
         "title": "NewwwwItemTitleWithoutId",
         "content": "ContentContent",
