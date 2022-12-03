@@ -12,8 +12,6 @@ internal static class CustomProductAssert
 {
     public static void IsSameProduct(this Assert assert, JToken expected, JToken actual)
     {
-        Assert.AreEqual(actual["alias"], actual["alias"],
-            "Expected to get same alias after editing");
         Assert.AreEqual(expected["title"], actual["title"],
             "Expected to get same title as edit json has");
         Assert.AreEqual(expected["price"], actual["price"],
@@ -40,6 +38,7 @@ public class ShopApiTests
     private static HttpClient _httpClient;
     private static ShopAPI _api;
     private static JsonValidator.JsonValidator _jsonValidator;
+    private static string _productSchemaJson;
     private static string _productsListSchemaJson;
     private static string _addProductResponseSchemaJson;
     private static List<int> _testProductsIds = new();
@@ -55,6 +54,7 @@ public class ShopApiTests
         _httpClient = new();
         _api = new ShopAPI(_baseUri, _httpClient);
         _jsonValidator = new();
+        _productSchemaJson = File.ReadAllText(@"..\..\..\JsonSchemas\productSchema.json");
         _productsListSchemaJson = File.ReadAllText(@"..\..\..\JsonSchemas\productsListSchema.json");
         _addProductResponseSchemaJson = File.ReadAllText(@"..\..\..\JsonSchemas\addProductResponseSchema.json");
         _addProductTestsJson = JObject.Parse(File.ReadAllText(@"..\..\..\JsonTestCases\addProductTests.json"));
@@ -75,24 +75,19 @@ public class ShopApiTests
     [TestMethod]
     public async Task Test_GetProductsReturnsNotEmptyArray()
     {
-        //arrange
+        //getting all products with api method
+        var response = await _api.GetProductsAsync();
 
-        //act
-        var result = await _api.GetProductsAsync();
-
-        //assert
-        _jsonValidator.Validate(_productsListSchemaJson, result);
-        Assert.IsTrue(result.Count > 0,
+        //assert response
+        _jsonValidator.Validate(_productsListSchemaJson, response);
+        Assert.IsTrue(response.Count > 0,
             "Expected not empty array of products, got count equals to 0");
     }
 
     [TestMethod]
     public async Task Test_GetProductsMatchesJsonSchema()
     {
-        //arrange
-        //TODO: схема act + assert
-
-        //act
+        //getting all products with api method
         var products = await _api.GetProductsAsync();
 
         //assert
@@ -104,68 +99,38 @@ public class ShopApiTests
     [TestMethod]
     public async Task Test_AddValidProduct()
     {
-        //arrange
-
         //act
         var response = await _api.AddProductAsync(_addProductTestsJson["valid"]!.ToObject<Product>()!);
 
         //assert
-        var productId = response["id"]!.ToObject<int>();
         _jsonValidator.Validate(_addProductResponseSchemaJson, response);
-        _testProductsIds.Add(response["id"]!.ToObject<int>());
-        Assert.IsTrue(_jsonValidator.wasSuccess,
-            "Expected success status code when adding valid product");
-        Assert.IsNotNull(Product.GetProductById(productId, await _api.GetProductsAsync()),
+        Assert.IsTrue(_jsonValidator.wasSuccess);
+        var productId = response["id"]!.ToObject<int>();
+        _testProductsIds.Add(productId);
+        var product = Product.GetProductById(productId, await _api.GetProductsAsync());
+        Assert.IsNotNull(product,
             "Expected to find recently created valid product in product list");
+        _jsonValidator.Validate(_productSchemaJson, product);
+        Assert.IsTrue(_jsonValidator.wasSuccess,
+            "Expected to get same json schema as product has");
     }
 
+    //FIXED: параметризировать тесты для работы с разными невалидными продуктами
+    [DataRow("invalidByCategoryIdLess")]
+    [DataRow("invalidByCategoryIdMore")]
     [TestMethod]
-    public async Task Test_AddInvalidProductWithCategoryIdLess()
+    public async Task Test_AddInvalidProductWithCategoryId(string testCaseName)
     {
         //arrange
 
         //act
-        var result = await _api.AddProductAsync(_addProductTestsJson["invalidByCategoryIdLess"]!.ToObject<Product>()!);
+        var result = await _api.AddProductAsync(_addProductTestsJson[testCaseName]!.ToObject<Product>()!);
 
         //assert
         var productId = result["id"]!.ToObject<int>();
-        _jsonValidator.Validate(_addProductResponseSchemaJson, result);
         _testProductsIds.Add(productId);
         Assert.IsNull(Product.GetProductById(productId, await _api.GetProductsAsync()),
             "Expected to not find recently created invalid product in product list");
-    }
-
-    //TODO: параметризировать тесты для работы с разными невалидными продуктами
-    [TestMethod]
-    public async Task Test_AddInvalidProductWithCategoryIdMore()
-    {
-        //arrange
-
-        //act
-        var result = await _api.AddProductAsync(_addProductTestsJson["invalidByCategoryIdMore"]!.ToObject<Product>()!);
-
-        //assert
-        var productId = result["id"]!.ToObject<int>();
-        _jsonValidator.Validate(_addProductResponseSchemaJson, result);
-        _testProductsIds.Add(productId);
-        Assert.IsNull(Product.GetProductById(productId, await _api.GetProductsAsync()),
-            "Expected to not find recently created invalid product in product list");
-    }
-
-    [TestMethod]
-    public async Task Test_AddValidProductWithRussianTitle()
-    {
-        //arrange
-        var expectedAlias = "taytl";
-
-        //act
-        var result = await _api.AddProductAsync(_addProductTestsJson["validWithRussianTitle"]!.ToObject<Product>()!);
-
-        //assert
-        var productId = result["id"]!.ToObject<int>();
-        _testProductsIds.Add(productId);
-        Assert.AreEqual(expectedAlias, Product.GetProductById(productId, await _api.GetProductsAsync())!["alias"],
-            "Expected to get right translit version of russian title");
     }
 
     [TestMethod]
@@ -176,15 +141,15 @@ public class ShopApiTests
         var expectedAliasSecond = "premium-chasy1-0";
         var expectedAliasThird = "premium-chasy1-0-0";
 
-        //act
-        var resultFirst = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
-        var resultSecond = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
-        var resultThird = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
+        //add products
+        var responseFirst = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
+        var responseSecond = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
+        var responseThird = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
 
-        //assert
-        var productIdFirst = resultFirst["id"]!.ToObject<int>();
-        var productIdSecond = resultSecond["id"]!.ToObject<int>();
-        var productIdThird = resultThird["id"]!.ToObject<int>();
+        //retrieve results and assert
+        var productIdFirst = responseFirst["id"]!.ToObject<int>();
+        var productIdSecond = responseSecond["id"]!.ToObject<int>();
+        var productIdThird = responseThird["id"]!.ToObject<int>();
         _testProductsIds.Add(productIdFirst);
         _testProductsIds.Add(productIdSecond);
         _testProductsIds.Add(productIdThird);
@@ -197,25 +162,28 @@ public class ShopApiTests
         Assert.AreEqual(expectedAliasThird, Product.GetProductById(productIdThird, products)!["alias"],
             "Expected to get alias with double -0-0 postfix");
     }
-    //TODO: перенсти cleanup наверх
+    //FIXED: перенести cleanup наверх
 
     [TestMethod]
     public async Task Test_EditExistingProduct()
     {
-        //arrange
+        //add product to further edit
         var response = await _api.AddProductAsync(_addProductTestsJson["validProductToFurtherEdit"]!.ToObject<Product>()!);
         var productId = response["id"]!.ToObject<int>();
         _testProductsIds.Add(productId);
         var editProduct = _editProductTestsJson["valid"]!;
         editProduct["id"] = productId;
+        var expectedAlias = editProduct["title"]!.ToString().ToLower();
 
-        //act
-        var result = await _api.EditProductAsync(_editProductTestsJson["valid"]!.ToObject<Product>()!);
+        //edit
+        var result = await _api.EditProductAsync(editProduct.ToObject<Product>()!);
 
-        //assert
-        //TODO: вынести проверку для всех полей в отдельный метод
+        //assert result
+        //FIXED: вынести проверку для всех полей в отдельный метод
         var actualProduct = Product.GetProductById(productId, await _api.GetProductsAsync())!;
         Assert.That.IsSameProduct(editProduct, actualProduct);
+        Assert.AreEqual(expectedAlias, actualProduct["alias"],
+            "Expected to get alias as lower version of title");
     }
 
     [TestMethod]
@@ -224,21 +192,23 @@ public class ShopApiTests
         //arrange
         var expectedStatus = 1;
         var expectedProduct = _editProductTestsJson["validWithNotExistingId"]!;
+        var expectedAlias = expectedProduct["title"]!.ToString().ToLower();
 
         //act
-        var response = await _api.EditProductAsync(_editProductTestsJson["validWithNotExistingId"]!.ToObject<Product>()!);
+        var response = await _api.EditProductAsync(expectedProduct.ToObject<Product>()!);
 
         //assert
-        var status = response["status"]!;
+        var actualStatus = response["status"]!;
         var products = await _api.GetProductsAsync();
         var editedProduct = products.Last();
         var editedProductId = editedProduct["id"]!.ToObject<int>();
-        expectedProduct["id"] = editedProductId;
         _testProductsIds.Add(editedProductId);
-        //Assert.AreEqual(expectedAlias, Product.GetProductById(editedProductId, products)!["alias"],
-        //    "Expected to get alias with foreign id after editing");
+
         Assert.That.IsSameProduct(expectedProduct, editedProduct);
-        Assert.AreEqual(expectedStatus, status);
+        Assert.AreEqual(expectedAlias, editedProduct["alias"],
+            "Expected to get alias as lower version of title");
+        Assert.AreEqual(expectedStatus, actualStatus,
+            "Expected to receive successfull status code after edit");
     }
 
     [TestMethod]
@@ -252,7 +222,34 @@ public class ShopApiTests
 
         //assert
         Assert.AreEqual(expectedStatus, response["status"]!.ToObject<int>(),
-            "Expected to get 0 status after trying editing product without specified id");
+            "Expected to get unsuccessfull status after trying editing product without specified id");
+    }
+
+    [TestMethod]
+    public async Task Test_EditProductWithSameTitleTwice()
+    {
+        var editProduct = _addProductTestsJson["validProductToFurtherEdit"]!;
+        var response = await _api.AddProductAsync(editProduct.ToObject<Product>()!);
+        var productId = response["id"]!.ToObject<int>();
+        var expectedAliasAfterFirstEdit = $"{editProduct["title"]!.ToString().ToLower()}-{productId}";
+        var expectedAliasAfterSecondEdit = editProduct["title"]!.ToString().ToLower();
+        editProduct["id"] = productId;
+        _testProductsIds.Add(productId);
+
+        //edit with same data, especially with the same title
+        await _api.EditProductAsync(editProduct.ToObject<Product>()!);
+
+        var actualProduct = Product.GetProductById(productId, await _api.GetProductsAsync());
+        Assert.IsNotNull(actualProduct);
+        Assert.That.IsSameProduct(editProduct, actualProduct);
+        Assert.AreEqual(expectedAliasAfterFirstEdit, actualProduct["alias"]);
+
+        //edit with same data, especially with the same title twice
+        await _api.EditProductAsync(editProduct.ToObject<Product>()!);
+        actualProduct = Product.GetProductById(productId, await _api.GetProductsAsync());
+        Assert.IsNotNull(actualProduct);
+        Assert.That.IsSameProduct(editProduct, actualProduct);
+        Assert.AreEqual(expectedAliasAfterSecondEdit, actualProduct["alias"]);
     }
 
     [TestMethod]
