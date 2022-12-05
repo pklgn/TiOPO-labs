@@ -100,19 +100,21 @@ public class ShopApiTests
     public async Task Test_AddValidProduct()
     {
         //add product
-        var response = await _api.AddProductAsync(_addProductTestsJson["valid"]!.ToObject<Product>()!);
+        var product = _addProductTestsJson["valid"]!;
+        var response = await _api.AddProductAsync(product.ToObject<Product>()!);
 
         //check response and get added product with schema validation
         _jsonValidator.Validate(_addProductResponseSchemaJson, response);
         Assert.IsTrue(_jsonValidator.wasSuccess);
         var productId = response["id"]!.ToObject<int>();
         _testProductsIds.Add(productId);
-        var product = Product.GetProductById(productId, await _api.GetProductsAsync());
-        Assert.IsNotNull(product,
+        var actualProduct = Product.GetProductById(productId, await _api.GetProductsAsync());
+        Assert.IsNotNull(actualProduct,
             "Expected to find recently created valid product in product list");
-        _jsonValidator.Validate(_productSchemaJson, product);
+        _jsonValidator.Validate(_productSchemaJson, actualProduct);
         Assert.IsTrue(_jsonValidator.wasSuccess,
             "Expected to get same json schema as product has");
+        Assert.That.IsSameProduct(product, actualProduct);
     }
 
     //FIXED: параметризировать тесты для работы с разными невалидными продуктами
@@ -137,11 +139,12 @@ public class ShopApiTests
         var expectedAliasFirst = "premium-chasy1";
         var expectedAliasSecond = "premium-chasy1-0";
         var expectedAliasThird = "premium-chasy1-0-0";
+        var product = _addProductTestsJson["validWithWatchTitle"]!;
 
         //add products
-        var responseFirst = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
-        var responseSecond = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
-        var responseThird = await _api.AddProductAsync(_addProductTestsJson["validWithWatchTitle"]!.ToObject<Product>()!);
+        var responseFirst = await _api.AddProductAsync(product.ToObject<Product>()!);
+        var responseSecond = await _api.AddProductAsync(product.ToObject<Product>()!);
+        var responseThird = await _api.AddProductAsync(product.ToObject<Product>()!);
 
         //retrieve results and check aliases
         var productIdFirst = responseFirst["id"]!.ToObject<int>();
@@ -152,11 +155,19 @@ public class ShopApiTests
         _testProductsIds.Add(productIdThird);
         var products = await _api.GetProductsAsync();
 
-        Assert.AreEqual(expectedAliasFirst, Product.GetProductById(productIdFirst, products)!["alias"],
+        var actualProductFirst = Product.GetProductById(productIdFirst, products)!;
+        var actualProductSecond = Product.GetProductById(productIdSecond, products)!;
+        var actualProductThird = Product.GetProductById(productIdThird, products)!;
+
+        Assert.That.IsSameProduct(product, actualProductFirst);
+        Assert.That.IsSameProduct(product, actualProductSecond);
+        Assert.That.IsSameProduct(product, actualProductThird);
+
+        Assert.AreEqual(expectedAliasFirst, actualProductFirst["alias"],
             "Expected to get alias without -0 postfix");
-        Assert.AreEqual(expectedAliasSecond, Product.GetProductById(productIdSecond, products)!["alias"],
+        Assert.AreEqual(expectedAliasSecond, actualProductSecond["alias"],
             "Expected to get alias with signle -0 postfix");
-        Assert.AreEqual(expectedAliasThird, Product.GetProductById(productIdThird, products)!["alias"],
+        Assert.AreEqual(expectedAliasThird, actualProductThird["alias"],
             "Expected to get alias with double -0-0 postfix");
     }
     //FIXED: перенести cleanup наверх
