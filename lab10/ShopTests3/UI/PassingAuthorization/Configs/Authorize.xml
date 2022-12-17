@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestData>
+  <Test name="Authorization on the website">
+    <Login>pklgn</Login>
+    <Password>security</Password>
+  </Test>
+</TestData>
