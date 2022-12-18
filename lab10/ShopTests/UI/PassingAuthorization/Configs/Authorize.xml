@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestData>
+  <Test name="Authorization on the website">
+    <Login>pklgn</Login>
+    <Password>security</Password>
+    <AlertMessage>Вы успешно авторизованы</AlertMessage>
+  </Test>
+  <Test name="Authorization on the website with invalid user">
+    <Login>user</Login>
+    <Password>password</Password>
+    <AlertMessage>Логин/пароль введены неверно</AlertMessage>
+  </Test>
+</TestData>
