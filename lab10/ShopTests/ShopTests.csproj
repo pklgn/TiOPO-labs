@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="UI\PassingAuthorization\Tests\AuthTests.cs" />
     <Compile Include="UI\PassingAuthorization\WebDriverMethods\AuthMethods.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
