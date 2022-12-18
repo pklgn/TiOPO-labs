@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UI\PassingAuthorization\Tests\AuthTests.cs" />
     <Compile Include="UI\PassingAuthorization\WebDriverMethods\AuthMethods.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,7 +68,6 @@
   <ItemGroup>
     <Folder Include="UI\AddingProductToCart\" />
     <Folder Include="UI\MakingOrder\" />
-    <Folder Include="UI\PassingAuthorization\Tests\" />
     <Folder Include="UI\SearchingProductInCatalog\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
