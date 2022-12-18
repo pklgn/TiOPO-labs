@@ -58,7 +58,14 @@ namespace ShopTests.UI.PassingAuthorization.Tests
 
             string alertMessage = TestContext.DataRow["AlertMessage"].ToString();
             var alertMessageElement = _authMethods.GetAlertMessageElement();
-            Assert.AreEqual(alertMessage, alertMessageElement.Text);
+            Assert.AreEqual(alertMessage, alertMessageElement.Text,
+                "Expected to get alert message that corresponds user data");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _webDriver.Quit();
         }
     }
 }
