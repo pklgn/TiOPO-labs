@@ -15,16 +15,19 @@
     <Link></Link>
     <Count>2</Count>
   </TestSearch>
-  <TestCategory name="[test1] Select search category">
+  <TestCategory name="Select search category without concrete category">
     <BaseCategory>men</BaseCategory>
     <ConcreteCategory></ConcreteCategory>
+    <Text></Text>
   </TestCategory>
-  <TestCategory name="[test2] Select search category">
+  <TestCategory name="Select search category with concrete category">
     <BaseCategory>men</BaseCategory>
     <ConcreteCategory>epos</ConcreteCategory>
+    <Text></Text>
   </TestCategory>
-  <TestCategory name="[test3] Select search category">
+  <TestCategory name="Select search category with concrete empty category">
     <BaseCategory>women</BaseCategory>
     <ConcreteCategory>adriatica</ConcreteCategory>
+    <Text>В этой категории товаров пока нет...</Text>
   </TestCategory>
 </TestData>

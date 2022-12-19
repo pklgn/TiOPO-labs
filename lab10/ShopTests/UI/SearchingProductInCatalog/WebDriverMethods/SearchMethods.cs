@@ -14,18 +14,18 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
         private IWebDriver _webDriver;
         private IWebElement _baseElement;
         private static readonly By
+            _categoryLinkXPath = By.XPath(".//a[contains(@href,'category')]"),
+            _categoryMenuXPath = By.XPath("//div[@class='menu']"),
+            _categoryTagXPath = By.XPath("//ul[contains(@class,'tag')]"),
             _searchBreadCrumbXPath = By.XPath("//*[@class='breadcrumb']"),
             _searchFormXPath = By.XPath("//form[@action='search']"),
             _searchInputXPath = By.XPath(".//*[@id='typeahead']"),
             _searchMenuSuggestionXPath = By.XPath(".//div[contains(@class,'tt-suggestion')]"),
             _searchMenuXPath = By.XPath(".//div[contains(@class,'tt-menu')]"),
             _searchOpenMenuXPath = By.XPath(".//div[contains(@class,'tt-open')]"),
+            _searchResultContainerXPath = By.XPath("//div[contains(@class,'prdt-left')]"),
             _searchResultLinkXPath = By.XPath(".//a[contains(@href, 'product/')]"),
-            _searchSubmitInputXPath = By.XPath("//input[contains(@class,'tt-hint')]"),
-            _categoryMenu = By.XPath("//div[@class='menu']"),
-            _categoryTag = By.XPath("//ul[contains(@class,'tag')]"),
-            _categoryLink = By.XPath(".//a[contains(@href,'category')]"),
-            _searchResultContainerXPath = By.XPath("//div[contains(@class,'prdt-left')]");
+            _searchSubmitInputXPath = By.XPath("//input[contains(@class,'tt-hint')]");
 
 
         public SearchMethods(IWebDriver webDriver)
@@ -87,7 +87,7 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
 
         public IWebElement GetCategoryMenuElement()
         {
-            return _webDriver.FindElement(_categoryMenu);
+            return _webDriver.FindElement(_categoryMenuXPath);
         }
 
         public void SelectCategory(string baseCategory, string concreteCategory)
@@ -119,10 +119,10 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
 
         public string GetProductCategory()
         {
-            var categoryTag = _webDriver.FindElement(_categoryTag);
+            var categoryTag = _webDriver.FindElement(_categoryTagXPath);
             var prevBaseElement = _baseElement;
             SetBaseElement(categoryTag);
-            var result = _baseElement.FindElement(_categoryLink).Text;
+            var result = _baseElement.FindElement(_categoryLinkXPath).Text;
             SetBaseElement(prevBaseElement);
             return result;
         }

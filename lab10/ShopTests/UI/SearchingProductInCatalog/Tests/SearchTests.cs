@@ -3,10 +3,11 @@
 
 using System;
 using System.Linq;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using ShopTests.UI.PassingAuthorization.WebDriverMethods;
 using OpenQA.Selenium;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.ObjectModel;
 
 namespace ShopTests.UI.SearchingProductInCatalog.Tests
 {
@@ -18,6 +19,15 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
             {
                 Assert.IsTrue(element.Enabled,
                     "Expected to see enabled web element");
+            }
+        }
+
+        public static void IsAppropriateBreadCrumb(this Assert assert, string breadCrumb, List<string> expectedElements)
+        {
+            foreach (var element in expectedElements)
+            {
+                Assert.IsTrue(breadCrumb.Contains(element),
+                    "Expected to contain each element in bread crumb");
             }
         }
     }
@@ -57,10 +67,10 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
         public void SearchProducts()
         {
             _searchMethods.SetBaseElement(_searchMethods.GetSearchFormElement());
-            var searchMenu = _searchMethods.GetSearchMenuElement();
 
             _searchMethods.SetBaseElement(_searchMethods.GetSearchInputElement());
 
+            var searchMenu = _searchMethods.GetSearchMenuElement();
             Assert.IsFalse(searchMenu.Displayed,
                 "Expected not to see search menu when nothing was given to search");
             string query = TestContext.DataRow["Query"].ToString();
@@ -76,9 +86,7 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
             _searchMethods.SubmitSearchInput();
             Assert.AreEqual($"{_url}{_searchUrl}", $"{ _webDriver.Url.Split('?').First()}/",
                 "Expected to switch to search result page");
-            Assert.IsTrue(_searchMethods.GetBreadCrumbText().Contains(query),
-                "Expected to have query string in search bread crumb");
-
+            Assert.That.IsAppropriateBreadCrumb(_searchMethods.GetBreadCrumbText(), new List<string> { query });
             Assert.That.IsEachWebElementEnabled(_searchMethods.GetSearchResults());
         }
 
@@ -98,25 +106,29 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
                 : concreteCategory;
             _searchMethods.SelectCategory(baseCategory, concreteCategory);
 
-            Assert.AreEqual($"{_url}{_categoryUrl}{concreteCategory}", _webDriver.Url);
+            Assert.AreEqual($"{_url}{_categoryUrl}{concreteCategory}", _webDriver.Url,
+                "Expected to switch to the according category page");
             var searchBreadCrumbText = _searchMethods.GetBreadCrumbText().ToLower();
-            Assert.IsTrue(searchBreadCrumbText.Contains(baseCategory));
-            Assert.IsTrue(searchBreadCrumbText.Contains(concreteCategory));
+            Assert.That.IsAppropriateBreadCrumb(searchBreadCrumbText, new List<string> { baseCategory, concreteCategory });
 
             var searchResults = _searchMethods.GetSearchResults();
             if (searchResults.Count == 0)
             {
-                var searchResultContainer = _searchMethods.GetSearchResultContainerElement();
-                Assert.AreEqual("В этой категории товаров пока нет...", searchResultContainer.Text);
+                var container = _searchMethods.GetSearchResultContainerElement();
+                var expectedText = TestContext.DataRow["Text"].ToString();
+                Assert.AreEqual(expectedText, container.Text,
+                    "Expected to get same search result text as input require");
                 return;
             }
 
             _searchMethods.SetBaseElement(searchResults.First());
             var productLink = _searchMethods.SelectSearchResultProduct();
-            Assert.AreEqual($"{productLink}", _webDriver.Url);
+            Assert.AreEqual($"{productLink}", _webDriver.Url,
+                "Expected to switch to concrete product page");
 
             var actualCategory = _searchMethods.GetProductCategory().ToLower();
-            Assert.AreEqual(concreteCategory, actualCategory);
+            Assert.AreEqual(concreteCategory, actualCategory,
+                "Ëxpected to get product that corresponds specified category");
         }
     }
-}
+}s
