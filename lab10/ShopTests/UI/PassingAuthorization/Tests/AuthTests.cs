@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ShopTests.UI.PassingAuthorization.Tests
 {
     [TestClass]
-    public class ShopTests
+    public class AuthTests
     {
         private AuthMethods _authMethods;
         private IWebDriver _webDriver;

@@ -57,17 +57,19 @@
     <Compile Include="UI\PassingAuthorization\Tests\AuthTests.cs" />
     <Compile Include="UI\PassingAuthorization\WebDriverMethods\AuthMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\SearchingProductInCatalog\Tests\SearchTests.cs" />
+    <Compile Include="UI\SearchingProductInCatalog\WebDriverMethods\SearchMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="UI\PassingAuthorization\Configs\Authorize.xml" />
+    <Content Include="UI\SearchingProductInCatalog\Configs\Search.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\AddingProductToCart\" />
     <Folder Include="UI\MakingOrder\" />
-    <Folder Include="UI\SearchingProductInCatalog\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestData>
+  <TestSearch name="Search concrete product">
+    <Query>Casio GA-1000-1AER</Query>
+    <Link>product/casio-ga-1000-1aer-3</Link>
+    <Count>1</Count>
+  </TestSearch>
+  <TestSearch name="Search products by keyword returns max suggestions count">
+    <Query>Часы</Query>
+    <Link></Link>
+    <Count>10</Count>
+  </TestSearch>
+  <TestSearch name="Search products by keyword returns several suggestions">
+    <Query>Часы 2</Query>
+    <Link></Link>
+    <Count>2</Count>
+  </TestSearch>
+  <TestCategory name="[test1] Select search category">
+    <BaseCategory>men</BaseCategory>
+    <ConcreteCategory></ConcreteCategory>
+  </TestCategory>
+  <TestCategory name="[test2] Select search category">
+    <BaseCategory>men</BaseCategory>
+    <ConcreteCategory>epos</ConcreteCategory>
+  </TestCategory>
+  <TestCategory name="[test3] Select search category">
+    <BaseCategory>women</BaseCategory>
+    <ConcreteCategory>adriatica</ConcreteCategory>
+  </TestCategory>
+</TestData>
