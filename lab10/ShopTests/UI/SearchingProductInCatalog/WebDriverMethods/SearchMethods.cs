@@ -6,13 +6,12 @@ using System.Collections.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
+using ShopTests.UI.common.WebDriverMethods;
 
 namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
 {
-    internal class SearchMethods
+    internal class SearchMethods : BaseMethods
     {
-        private IWebDriver _webDriver;
-        private IWebElement _baseElement;
         private static readonly By
             _categoryLinkXPath = By.XPath(".//a[contains(@href,'category')]"),
             _categoryMenuXPath = By.XPath("//div[@class='menu']"),
@@ -28,14 +27,8 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
             _searchSubmitInputXPath = By.XPath("//input[contains(@class,'tt-hint')]");
 
 
-        public SearchMethods(IWebDriver webDriver)
+        public SearchMethods(IWebDriver webDriver) : base(webDriver)
         {
-            _webDriver = webDriver;
-        }
-
-        public void SetBaseElement(IWebElement webElement)
-        {
-            _baseElement = webElement;
         }
 
         public IWebElement GetSearchFormElement()

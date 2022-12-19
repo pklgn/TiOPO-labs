@@ -2,13 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using OpenQA.Selenium;
+using ShopTests.UI.common.WebDriverMethods;
 
 namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
 {
-    internal class AuthMethods
+    internal class AuthMethods : BaseMethods
     {
-        private IWebDriver _webDriver;
-        private IWebElement _baseElement;
         private static readonly By
             _alertMessageXPath = By.XPath("//div[contains(@class,'alert')]"),
             _authFormXPath = By.XPath("//form[@id='login']"),
@@ -20,14 +19,8 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
             _dropdownSignInButtonXPath = By.XPath($".//a[contains(@href,'user/login')]"),
             _dropXPath = By.XPath("//div[contains(@class,'drop')]");
 
-        public AuthMethods(IWebDriver webDriver)
+        public AuthMethods(IWebDriver webDriver) : base(webDriver)
         {
-            _webDriver = webDriver;
-        }
-
-        public void SetBaseElement(IWebElement webElement)
-        {
-            _baseElement = webElement;
         }
 
         public IWebElement GetDropElement()

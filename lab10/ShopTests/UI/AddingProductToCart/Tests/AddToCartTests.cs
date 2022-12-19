@@ -5,7 +5,6 @@ using System;
 using ShopTests.UI.AddingProductToCart.WebDriverMethods;
 using OpenQA.Selenium;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
 
 namespace ShopTests.UI.AddingProductToCart.Tests
 {
@@ -93,25 +92,9 @@ namespace ShopTests.UI.AddingProductToCart.Tests
             DataAccessMethod.Sequential)]
         public void AddToCartFromProductList()
         {
-            CartProduct firstProduct = new CartProduct(
-                TestContext.DataRow["FirstProductName"].ToString(),
-                COMMON_PRODUCT_COUNT.ToString(),
-                TestContext.DataRow["FirstProductPrice"].ToString()
-                );
-            var firstProductLink = TestContext.DataRow["FirstProductLink"].ToString();
-            _addToCartMethods.SetBaseElement(_addToCartMethods.GetProductItemCartElement(firstProductLink));
-            _addToCartMethods.AddProductToCart(COMMON_PRODUCT_COUNT);
-
+            CartProduct firstProduct = BuildAndAddProductToCart("First");
             _addToCartMethods.CloseModal();
-
-            CartProduct secondProduct = new CartProduct(
-                TestContext.DataRow["SecondProductName"].ToString(),
-                COMMON_PRODUCT_COUNT.ToString(),
-                TestContext.DataRow["SecondProductPrice"].ToString()
-                );
-            var secondProductLink = TestContext.DataRow["SecondProductLink"].ToString();
-            _addToCartMethods.SetBaseElement(_addToCartMethods.GetProductItemCartElement(secondProductLink));
-            _addToCartMethods.AddProductToCart(COMMON_PRODUCT_COUNT);
+            CartProduct secondProduct = BuildAndAddProductToCart("Second");
 
             var firstCartProduct = _addToCartMethods.GetCartProduct(0);
             var secondCartProduct = _addToCartMethods.GetCartProduct(1);
@@ -123,6 +106,20 @@ namespace ShopTests.UI.AddingProductToCart.Tests
             var totalQuantity = TestContext.DataRow["TotalQuantity"].ToString();
             var totalPrice = TestContext.DataRow["TotalPrice"].ToString();
             Assert.That.IsSameCartTotal(new CartTotal(totalQuantity, totalPrice), cartTotal);
+        }
+
+        protected CartProduct BuildAndAddProductToCart(string dataRowPrefix)
+        {
+            CartProduct product = new CartProduct(
+                TestContext.DataRow[$"{dataRowPrefix}ProductName"].ToString(),
+                COMMON_PRODUCT_COUNT.ToString(),
+                TestContext.DataRow[$"{dataRowPrefix}ProductPrice"].ToString()
+                );
+            var productLink = TestContext.DataRow[$"{dataRowPrefix}ProductLink"].ToString();
+            _addToCartMethods.SetBaseElement(_addToCartMethods.GetProductItemCartElement(productLink));
+            _addToCartMethods.AddProductToCart(COMMON_PRODUCT_COUNT);
+
+            return product;
         }
     }
 }

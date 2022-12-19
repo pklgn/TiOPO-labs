@@ -66,12 +66,11 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
         public void SearchProducts()
         {
             _searchMethods.SetBaseElement(_searchMethods.GetSearchFormElement());
-
-            _searchMethods.SetBaseElement(_searchMethods.GetSearchInputElement());
-
             var searchMenu = _searchMethods.GetSearchMenuElement();
             Assert.IsFalse(searchMenu.Displayed,
                 "Expected not to see search menu when nothing was given to search");
+
+            _searchMethods.SetBaseElement(_searchMethods.GetSearchInputElement());
             string query = TestContext.DataRow["Query"].ToString();
             _searchMethods.FillInputElement(query);
             Assert.IsTrue(searchMenu.Displayed,

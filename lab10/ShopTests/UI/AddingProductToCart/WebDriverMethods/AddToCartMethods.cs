@@ -7,11 +7,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using static System.Net.Mime.MediaTypeNames;
+using ShopTests.UI.common.WebDriverMethods;
 
 namespace ShopTests.UI.AddingProductToCart.WebDriverMethods
 {
-    struct CartProduct
+    public struct CartProduct
     {
         public CartProduct(string name, string quantity, string price)
         {
@@ -25,7 +25,7 @@ namespace ShopTests.UI.AddingProductToCart.WebDriverMethods
         public string price;
     }
 
-    struct CartTotal
+    public struct CartTotal
     {
         public CartTotal(string quantity, string price)
         {
@@ -37,11 +37,9 @@ namespace ShopTests.UI.AddingProductToCart.WebDriverMethods
         public string price;
     }
 
-    internal class AddToCartMethods
+    internal class AddToCartMethods : BaseMethods
     {
-        private IWebDriver _webDriver;
-        private IWebElement _baseElement;
-        private static readonly By
+        protected static readonly By
             _cartAddXPath = By.XPath(".//*[contains(@class, 'add-to-cart-link')]"),
             _cartQuantityXPath = By.XPath("//input[@name='quantity']"),
             _cartXPath = By.XPath("//*[contains(@class,'simpleCart_shelfItem')]"),
@@ -51,7 +49,7 @@ namespace ShopTests.UI.AddingProductToCart.WebDriverMethods
             _cartSimpleTotalXpath = By.XPath("//*[@class='simpleCart_total']"),
             _modalCloseXPath = By.XPath("//*[contains(@class, 'close')]");
 
-        private Dictionary<string, int> _modalProductRowColumns = new Dictionary<string, int>
+        protected Dictionary<string, int> _modalProductRowColumns = new Dictionary<string, int>
         {
             {"product", 0},
             {"name", 1},
@@ -59,20 +57,14 @@ namespace ShopTests.UI.AddingProductToCart.WebDriverMethods
             {"price", 3},
         };
 
-        private Dictionary<string, int> _modalTotal = new Dictionary<string, int>
+        protected Dictionary<string, int> _modalTotal = new Dictionary<string, int>
         {
             {"quantity", 1},
             {"price", 1},
         };
 
-        public AddToCartMethods(IWebDriver webDriver)
+        public AddToCartMethods(IWebDriver webDriver) : base(webDriver)
         {
-            _webDriver = webDriver;
-        }
-
-        public void SetBaseElement(IWebElement webElement)
-        {
-            _baseElement = webElement;
         }
 
         public IWebElement GetSimpleCartElement()
