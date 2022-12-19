@@ -32,7 +32,6 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
         }
     }
 
-
     [TestClass]
     public class SearchTests
     {
@@ -131,4 +130,4 @@ namespace ShopTests.UI.SearchingProductInCatalog.Tests
                 "Ëxpected to get product that corresponds specified category");
         }
     }
-}s
+}

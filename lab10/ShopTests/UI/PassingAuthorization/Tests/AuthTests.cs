@@ -27,6 +27,12 @@ namespace ShopTests.UI.PassingAuthorization.Tests
             _authMethods = new AuthMethods(_webDriver);
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _webDriver.Quit();
+        }
+
         [TestMethod]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML",
                     "..\\..\\UI\\PassingAuthorization\\Configs\\Authorize.xml",
@@ -60,12 +66,6 @@ namespace ShopTests.UI.PassingAuthorization.Tests
             var alertMessageElement = _authMethods.GetAlertMessageElement();
             Assert.AreEqual(alertMessage, alertMessageElement.Text,
                 "Expected to get alert message that corresponds user data");
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            _webDriver.Quit();
         }
     }
 }

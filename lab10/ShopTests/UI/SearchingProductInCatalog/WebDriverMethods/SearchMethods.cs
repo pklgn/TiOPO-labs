@@ -120,11 +120,7 @@ namespace ShopTests.UI.PassingAuthorization.WebDriverMethods
         public string GetProductCategory()
         {
             var categoryTag = _webDriver.FindElement(_categoryTagXPath);
-            var prevBaseElement = _baseElement;
-            SetBaseElement(categoryTag);
-            var result = _baseElement.FindElement(_categoryLinkXPath).Text;
-            SetBaseElement(prevBaseElement);
-            return result;
+            return categoryTag.FindElement(_categoryLinkXPath).Text;
         }
 
         public IWebElement GetSearchResultContainerElement()
