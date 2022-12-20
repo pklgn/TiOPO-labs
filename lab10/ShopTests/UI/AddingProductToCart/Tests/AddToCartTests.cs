@@ -108,7 +108,7 @@ namespace ShopTests.UI.AddingProductToCart.Tests
             Assert.That.IsSameCartTotal(new CartTotal(totalQuantity, totalPrice), cartTotal);
         }
 
-        protected CartProduct BuildAndAddProductToCart(string dataRowPrefix)
+        private CartProduct BuildAndAddProductToCart(string dataRowPrefix)
         {
             CartProduct product = new CartProduct(
                 TestContext.DataRow[$"{dataRowPrefix}ProductName"].ToString(),
