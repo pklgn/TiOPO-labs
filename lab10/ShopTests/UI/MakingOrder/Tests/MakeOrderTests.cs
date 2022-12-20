@@ -11,7 +11,6 @@ namespace ShopTests.UI.MakingOrder.Tests
     [TestClass]
     public class MakeOrderTests
     {
-        private static readonly int COMMON_PRODUCT_COUNT = 1;
         private MakeOrderMethods _makeOrderMethods;
         private IWebDriver _webDriver;
         private string _url = "http://shop.qatl.ru/";
@@ -35,12 +34,34 @@ namespace ShopTests.UI.MakingOrder.Tests
 
         [TestMethod]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML",
-                    "..\\..\\UI\\AddingProductToCart\\Configs\\Cart.xml",
-                    "TestProductPage",
+                    "..\\..\\UI\\MakingOrder\\Configs\\Order.xml",
+                    "TestIncognito",
                     DataAccessMethod.Sequential)]
         public void MakeOrderFromModal()
         {
-            
+            var productLink = TestContext.DataRow["Link"].ToString();
+            _webDriver.Navigate().GoToUrl($"{_url}{productLink}");
+
+            _makeOrderMethods.SetBaseElement(_makeOrderMethods.GetSimpleCartElement());
+            var quantity = TestContext.DataRow["Quantity"].ToString();
+            _makeOrderMethods.AddProductToCart(int.Parse(quantity));
+            var cartProduct = _makeOrderMethods.GetCartProduct(0);
+
+            _makeOrderMethods.SwitchToCartPage(_url);
+
+            var customerInfo = new CustomerInfo(
+                TestContext.DataRow["Login"].ToString() + DateTime.Now.ToString(),
+                TestContext.DataRow["Password"].ToString(),
+                TestContext.DataRow["CustomerName"].ToString(),
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds + TestContext.DataRow["Email"].ToString(),
+                TestContext.DataRow["Address"].ToString(),
+                TestContext.DataRow["Note"].ToString()
+                );
+
+            _makeOrderMethods.SubmitCustomerInfo(customerInfo);
+
+            Assert.AreEqual(TestContext.DataRow["Alert"].ToString(), _makeOrderMethods.GetOrderAlertText(),
+                "Expected to see text according to the user submit info text");
         }
     }
 }

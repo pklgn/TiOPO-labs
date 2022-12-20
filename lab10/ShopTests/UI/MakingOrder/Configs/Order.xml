@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TestData>
-  <TestProductPage name="[test1] Add product to cart">
+  <TestIncognito name="[test1] Add product to cart">
     <Category>citizen</Category>
     <Name>Citizen JP1010-00E</Name>
     <Quantity>1</Quantity>
@@ -8,33 +8,12 @@
     <TotalQuantity>1</TotalQuantity>
     <TotalPrice>400</TotalPrice>
     <Link>product/citizen-jp1010-00e</Link>
-  </TestProductPage>
-  <TestProductPage name="[test2] Add product to cart">
-    <Category>citizen</Category>
-    <Name>Citizen BJ2111-08E</Name>
-    <Quantity>2</Quantity>
-    <Price>500</Price>
-    <TotalQuantity>2</TotalQuantity>
-    <TotalPrice>1000</TotalPrice>
-    <Link>product/citizen-bj2111-08e</Link>
-  </TestProductPage>
-  <TestProductPage name="Add product to cart with zero count">
-    <Category>citizen</Category>
-    <Name>Citizen BJ2111-08E</Name>
-    <Quantity>0</Quantity>
-    <Price>500</Price>
-    <TotalQuantity>0</TotalQuantity>
-    <TotalPrice>0</TotalPrice>
-    <Link>product/citizen-bj2111-08e</Link>
-  </TestProductPage>
-  <TestProductList name="Add products to cart from product list">
-    <FirstProductName>CASIO GA-1000-1AER</FirstProductName>
-    <FirstProductPrice>400</FirstProductPrice>
-    <FirstProductLink>product/casio-ga-1000-1aer-3</FirstProductLink>
-    <SecondProductName>ROYAL LONDON 20034-02</SecondProductName>
-    <SecondProductPrice>110</SecondProductPrice>
-    <SecondProductLink>product/royal-london-20034-02</SecondProductLink>
-    <TotalQuantity>2</TotalQuantity>
-    <TotalPrice>510</TotalPrice>
-  </TestProductList>
+    <Login>log1n2</Login>
+    <Password>security</Password>
+    <CustomerName>Pavel</CustomerName>
+    <Email>email2@email.com</Email>
+    <Address>Planet Earth</Address>
+    <Note>Lorem ipsum</Note>
+    <Alert>Спасибо за Ваш заказ. В ближайшее время с Вами свяжется менеджер для согласования заказа</Alert>
+  </TestIncognito>
 </TestData>
